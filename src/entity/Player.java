@@ -92,4 +92,8 @@ public class Player extends AnimatedEntity{
 	public int getNextLevelXp() {
 		return this.nextLevelXp;
 	}
+
+	public int getLevel() {
+		return this.level;
+	}
 }

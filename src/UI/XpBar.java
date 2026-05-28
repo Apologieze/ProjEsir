@@ -3,6 +3,8 @@ import entity.Position;
 import entity.Player;
 import main.GamePanel;
 
+import java.awt.FontMetrics;
+import java.awt.Font;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -42,6 +44,16 @@ public class XpBar extends Position implements HUD {
         //  Le contour
         a_g2.setColor(new Color(0, 0, 0));
         a_g2.drawRect(this.getX(), this.getY(), this.m_largeur, this.m_hauteur);
+
+        // texte
+        Font fontUI = new Font("Impact", Font.BOLD, 25);
+        a_g2.setFont(fontUI);
+        a_g2.setColor(new Color(0, 0, 0));
+        String texteLvl = "Lvl. " + m_player.getLevel();
+        FontMetrics metrics = a_g2.getFontMetrics(fontUI);
+        int textX = this.getX() + (this.m_largeur - metrics.stringWidth(texteLvl)) / 2;
+        int textY = this.getY() + ((this.m_hauteur - metrics.getHeight()) / 2) + metrics.getAscent();
+        a_g2.drawString(texteLvl, textX, textY);
     }
 
 }
