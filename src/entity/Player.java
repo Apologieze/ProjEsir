@@ -1,42 +1,56 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 import UI.Text;
 import main.GamePanel;
 import main.KeyHandler;
-
+import manager.ImageAssetManager;
 
 /**
- * Dfintition du comportement d'un joueur
+ * Définition du comportement d'un joueur
  *
  */
-public class Player extends AnimatedEntity{
+public class Player extends AnimatedEntity {
 	public final int SIZE = 16 * 3;
 	KeyHandler keyH;
 	private int xp;
 	private int level;
 	private int nextLevelXp;
 	private Text lvlUpText;
-	private int element; //0=fire, 1=grass, 2=water
+	private int element; // 0=fire, 1=grass, 2=water
+
+	// Tableau contenant les animations préchargées pour les 3 éléments
+	@SuppressWarnings("unchecked")
+	private List<BufferedImage>[] animations = new List[3];
 
 	/**
 	 * Constructeur de Player
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
 	public Player(KeyHandler a_keyH) {
-		super("/bee/fire", 10);
+		// On charge le feu par défaut via le constructeur parent
+		super(ImageAssetManager.loadImagesFromFolder("/bee/fire"), 10);
 		this.keyH = a_keyH;
+
+		// Préchargement des 3 éléments en mémoire
+		animations[0] = this.frames;
+		animations[1] = ImageAssetManager.loadImagesFromFolder("/bee/grass");
+		animations[2] = ImageAssetManager.loadImagesFromFolder("/bee/water");
+
 		this.setDefaultValues();
 
 		this.xp = 0;
 		this.nextLevelXp = 100;
 		this.level = 1;
 		this.element = 0;
+		this.setSize(SIZE, SIZE); // On définit la taille pour l'entité
 	}
 
 	/**
-	 * Initialisation des donnes membres avec des valeurs par dfaut
+	 * Initialisation des données membres avec des valeurs par défaut
 	 */
 	protected void setDefaultValues() {
 		x = 100;
@@ -46,7 +60,7 @@ public class Player extends AnimatedEntity{
 	}
 
 	/**
-	 * Mise  jour des donnes du joueur
+	 * Mise à jour des données du joueur
 	 */
 	public void update() {
 		updateAnimation();
@@ -66,22 +80,35 @@ public class Player extends AnimatedEntity{
 			xAxis += 1;
 		}
 		move(xAxis, yAxis, speed);
+
 		if (keyH.nextElementClicked) {
-			this.element=(getElement()+1)%3;
+			setElement((getElement() + 1) % 3);
 			keyH.nextElementClicked = false;
 		}
 	}
 
 	/**
-	 * Affichage du l'image du joueur dans la fentre du jeu
+	 * Change l'élément actuel et met à jour l'animation associée
+	 */
+	public void setElement(int newElement) {
+		this.element = newElement;
+		// On remplace la liste d'images utilisée par AnimatedEntity
+		this.frames = animations[newElement];
+		this.currentFrameIndex = 0;
+	}
+
+	/**
+	 * Affichage de l'image du joueur dans la fenêtre du jeu
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+		// On dessine l'image
+		//a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+		super.draw(a_g2);
 
+		// On dessine le texte de level up s'il existe
 		if (lvlUpText != null) {
 			lvlUpText.draw(a_g2);
-
 
 			if (!lvlUpText.isAlive()) {
 				lvlUpText = null;
@@ -96,7 +123,7 @@ public class Player extends AnimatedEntity{
 	public void setXp(int xp) {
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
-			this.xp = (xp)%this.getNextLevelXp();
+			this.xp = (xp) % this.getNextLevelXp();
 			manager.SoundAssetManager.playSE("levelup.wav");
 			this.nextLevelXp += this.getNextLevelXp() / 2;
 			lvlUpText = new Text((int)x, (int)y - 10, "+5 ATK");
@@ -114,5 +141,7 @@ public class Player extends AnimatedEntity{
 		return this.level;
 	}
 
-	public int getElement() {return this.element;}
+	public int getElement() {
+		return this.element;
+	}
 }
