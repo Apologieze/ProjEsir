@@ -11,7 +11,7 @@ import main.KeyHandler;
  * Dfintition du comportement d'un joueur
  *
  */
-public class Player extends AnimatedEntity {
+public class Player extends AnimatedEntity{
 	public final int SIZE = 16 * 3;
 	KeyHandler keyH;
 	private int xp;
@@ -22,7 +22,6 @@ public class Player extends AnimatedEntity {
 
 	/**
 	 * Constructeur de Player
-	 *
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
 	public Player(KeyHandler a_keyH) {
@@ -71,11 +70,10 @@ public class Player extends AnimatedEntity {
 
 	/**
 	 * Affichage du l'image du joueur dans la fentre du jeu
-	 *
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		a_g2.drawImage(getCurrentFrame(), (int) x, (int) y, SIZE, SIZE, null);
+		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
 
 		if (lvlUpText != null) {
 			lvlUpText.draw(a_g2);
@@ -94,11 +92,12 @@ public class Player extends AnimatedEntity {
 	public void setXp(int xp) {
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
-			this.xp = (xp) % this.getNextLevelXp();
+			this.xp = (xp)%this.getNextLevelXp();
 			manager.SoundAssetManager.playSE("levelup.wav");
 			this.nextLevelXp += this.getNextLevelXp() / 2;
-			lvlUpText = new Text((int) x, (int) y - 10, "+5 ATK");
-		} else {
+			lvlUpText = new Text((int)x, (int)y - 10, "+5 ATK");
+		}
+		else {
 			this.xp = xp;
 		}
 	}

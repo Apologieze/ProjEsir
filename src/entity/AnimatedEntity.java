@@ -2,6 +2,7 @@ package entity;
 
 import manager.ImageAssetManager;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -63,5 +64,18 @@ public abstract class AnimatedEntity extends Entity {
             return null;
         }
         return frames.get(currentFrameIndex);
+    }
+
+    /**
+     * Dessine automatiquement l'entité sur l'écran en utilisant sa position
+     * et ses dimensions définies (width et height)
+     */
+    public void draw(Graphics2D a_g2) {
+        BufferedImage currentFrame = getCurrentFrame();
+
+        // Sécurité si l'image n'a pas pu être chargée
+        if (currentFrame != null) {
+            a_g2.drawImage(currentFrame, (int)x, (int)y, width, height, null);
+        }
     }
 }

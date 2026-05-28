@@ -42,6 +42,10 @@ public class GamePanel extends JPanel implements Runnable{
 	HUD m_xpBar;
 	HUD m_icon;
 
+	public manager.EnemyManager m_enemyM;
+	public manager.SpellManager m_spellM;
+	private int enemySpawnTimer = 0;
+
 	/**
 	 * Constructeur
 	 */
@@ -53,6 +57,10 @@ public class GamePanel extends JPanel implements Runnable{
 		m_heart = new Heart(this, m_player, 20, 20);
 		m_xpBar = new XpBar(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
 		m_icon = new Icon(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
+
+		m_enemyM = new manager.EnemyManager(this, m_player);
+		m_spellM = new manager.SpellManager(this, m_enemyM);
+		m_enemyM.setSpellManager(m_spellM);
 
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.black);
@@ -109,6 +117,15 @@ public class GamePanel extends JPanel implements Runnable{
 	public void update() {
 		m_tileM.update();
 		m_player.update();
+
+		m_spellM.update();
+		m_enemyM.update();
+
+		enemySpawnTimer++;
+		if (enemySpawnTimer >= 300) {
+			m_enemyM.spawnRandomPlant();
+			enemySpawnTimer = 0;
+		}
 	}
 
 	/**
@@ -119,6 +136,8 @@ public class GamePanel extends JPanel implements Runnable{
 		Graphics2D g2 = (Graphics2D) g;
 		m_tileM.draw(g2);
 		m_player.draw(g2);
+		m_enemyM.draw(g2);
+		m_spellM.draw(g2);
 		m_heart.draw(g2);
 		m_xpBar.draw(g2);
 		m_icon.draw(g2);

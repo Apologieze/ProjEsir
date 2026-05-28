@@ -1,21 +1,21 @@
 package entity;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.List;
+import java.awt.image.BufferedImage;
 import main.GamePanel;
 
 public class EnemySpell extends AnimatedEntity implements ISpell {
     private boolean active = false;
     private float dx, dy;
     private GamePanel gp;
-    public final int type; // 0, 1 ou 2
+    public final int type;
 
     public EnemySpell(GamePanel gp, List<BufferedImage> preloadedFrames, int animationSpeed, int type) {
-        super(preloadedFrames, animationSpeed);
+        super(preloadedFrames, animationSpeed); // Utilisation directe de ton nouveau constructeur !
         this.gp = gp;
         this.type = type;
         this.speed = 4;
+        this.setSize(gp.TILE_SIZE, gp.TILE_SIZE);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         this.dx = dirX;
         this.dy = dirY;
         this.active = true;
-        this.currentFrameIndex = 0; // Réinitialisation de l'animation
+        this.currentFrameIndex = 0;
     }
 
     @Override
@@ -39,11 +39,7 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         }
     }
 
-    @Override
-    public void draw(Graphics2D g2) {
-        if (!active) return;
-        g2.drawImage(getCurrentFrame(), (int)x, (int)y, gp.TILE_SIZE, gp.TILE_SIZE, null);
-    }
+    // draw() SUPPRIMÉ (Géré par AnimatedEntity)
 
     @Override
     public boolean isActive() { return active; }

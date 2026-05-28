@@ -15,6 +15,8 @@ public class SpellManager {
 
     private GamePanel gp;
 
+    private EnemyManager enemyManager;
+
     // Pools d'objets
     private List<PlayerSpell> playerSpellPool;
     private List<EnemySpell> enemySpellPool;
@@ -25,8 +27,9 @@ public class SpellManager {
     private static BufferedImage[] playerSpellImages = new BufferedImage[3];
     private static List<List<BufferedImage>> enemySpellAnimations = new ArrayList<>(3);
 
-    public SpellManager(GamePanel gp) {
+    public SpellManager(GamePanel gp, EnemyManager enemyManager) {
         this.gp = gp;
+        this.enemyManager = enemyManager;
         this.playerSpellPool = new ArrayList<>(MAX_PLAYER_SPELLS);
         this.enemySpellPool = new ArrayList<>(MAX_ENEMY_SPELLS);
 
@@ -42,13 +45,13 @@ public class SpellManager {
         try {
             // Remplacer par vos chemins réels
             if (playerSpellImages[0] == null) {
-                playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/spells/player_type1.png"));
-                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/spells/player_type2.png"));
-                playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/spells/player_type3.png"));
+                playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
+                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
+                playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
 
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/spells/enemy_type1"));
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/spells/enemy_type2"));
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/spells/enemy_type3"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,12 +62,11 @@ public class SpellManager {
      * Pré-allocation des instances de sorts désactivés.
      */
     private void initializePools() {
-        // Pré-allocation des sorts joueur (ex: répartition égale des types ou type par défaut)
         for (int i = 0; i < MAX_PLAYER_SPELLS; i++) {
-            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0)); // Type 0 par défaut
+            // On passe le enemyManager au sort
+            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0, enemyManager));
         }
 
-        // Pré-allocation des sorts ennemis
         for (int i = 0; i < MAX_ENEMY_SPELLS; i++) {
             enemySpellPool.add(new EnemySpell(gp, enemySpellAnimations.get(0), 10, 0));
         }
