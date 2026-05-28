@@ -159,6 +159,8 @@ public class Player extends AnimatedEntity {
 
 	public int getXp() { return this.xp; }
 
+	public void addXp(int xp){setXp(this.xp+xp);}
+
 	public void setXp(int xp) {
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
