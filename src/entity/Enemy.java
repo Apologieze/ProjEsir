@@ -69,7 +69,6 @@ public abstract class Enemy extends AnimatedEntity {
      * Gère la prise de dégâts de l'ennemi (sans frames d'invincibilité)
      */
     public void takeDamage(int damage) {
-        life -= damage;
         if (frameCounterDamage <= 0) {
             super.life -= damage;
             super.frameCounterDamage = 30;

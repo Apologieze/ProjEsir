@@ -212,6 +212,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 			if (playerBounds.intersects(heart.getHitbox())) {
 				if (m_player.getLife() < 9) {
+					manager.SoundAssetManager.playSE("soin.wav");
 					m_player.setLife(m_player.getLife() + 1);
 
 
