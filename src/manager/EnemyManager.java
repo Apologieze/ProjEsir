@@ -1,6 +1,7 @@
 package manager;
 
 import entity.Enemy;
+import entity.EnemyBoss;
 import entity.PlantEnemy;
 import entity.Player;
 import main.GamePanel;
@@ -19,6 +20,12 @@ public class EnemyManager {
     // Cache des animations
     private List<BufferedImage> plantFrames;
 
+    private int normalEnemiesSpawned = 0;
+    private boolean isBossActive = false;
+
+     //(0=Forêt, 1=Eau, 2=feu, selon tes types)
+    private BufferedImage[] bossImages = new BufferedImage[3];
+
     public EnemyManager(GamePanel gp, Player player) {
         this.gp = gp;
         this.player = player;
@@ -35,6 +42,14 @@ public class EnemyManager {
 
     private void loadAssets() {
         plantFrames = ImageAssetManager.loadImagesFromFolder("/enemy/grass");
+
+        try {
+            bossImages[0] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/16.png"));
+            bossImages[1] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/05.png"));
+            bossImages[2] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/01.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void update() {
@@ -42,6 +57,9 @@ public class EnemyManager {
             Enemy e = enemies.get(i);
             e.update();
             if (e.getLife() <= 0) {
+                if (e instanceof EnemyBoss) {
+                    System.out.println("LE BOSS EST MORT ! NIVEAU TERMINÉ !");
+                }
                 enemies.remove(i);
             }
         }
@@ -57,9 +75,8 @@ public class EnemyManager {
         int playerLvl = player.getLevel();
         double rand = Math.random(); // Génère un nombre entre 0.0 et 1.0
 
-        // Cas particulier : Si le joueur est niveau 1, il ne peut pas avoir "1 de moins"
+        // Si le joueur est niveau 1, il ne peut pas avoir "1 de moins"
         if (playerLvl == 1) {
-            // On redistribue les 15% du niveau inférieur au niveau actuel (50% + 15% + 10% restants = 75%)
             if (rand < 0.25) {
                 return playerLvl + 1; // 25% de chance d'avoir le niveau supérieur
             } else {
@@ -67,7 +84,7 @@ public class EnemyManager {
             }
         }
 
-        // Cas général (Joueur niveau 2 ou plus)
+        // Joueur niveau 2 ou plus
         if (rand < 0.25) {
             return playerLvl + 1;     // 25% de chance d'avoir (Niveau + 1)
         } else if (rand < 0.40) {     // 0.25 + 0.15 = 0.40
@@ -78,13 +95,35 @@ public class EnemyManager {
     }
 
     /**
-     * Génère une Plante avec les images préchargées
+     * Génère un ennemi aléatoire en fonction du niveau en cours
      */
-    public void spawnRandomPlant() {
-        //System.out.println("AJOUT D'UNE PLANTE");
-        // On donne la référence des images déjà en mémoire
-        PlantEnemy plant = new PlantEnemy(player, gp, spellManager, plantFrames, this.generateLevelDrop());
+    public void spawnRandomEnemy(int levelNum) {
+        if (isBossActive) return;
 
+        // On incrémente notre compteur
+        normalEnemiesSpawned++;
+
+        // Si on a atteint les 30 ennemis, on lance le boss au lieu d'un ennemi normal
+        if (normalEnemiesSpawned >= 5) {
+            spawnBoss(levelNum);
+            return; // On sort de la méthode pour ne pas faire spawner de mob normal
+        }
+
+        Enemy newEnemy = null;
+        int levelDrop = this.generateLevelDrop();
+
+        if (levelNum == 1) {
+            newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
+        }
+        else if (levelNum == 2) {
+            // TODO: Remplacer par WaterEnemy une fois la classe créée
+            // newEnemy = new WaterEnemy(player, gp, spellManager, waterFrames, levelDrop);
+            newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
+        }
+        else {
+            // Sécurité par défaut
+            newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
+        }
         int spawnZone = (int) (Math.random() * 3);
         float startX = 0, startY = 0;
         float entryDx = 0, entryDy = 0;
@@ -107,10 +146,33 @@ public class EnemyManager {
                 break;
         }
 
-        plant.setPosition(startX, startY);
-        plant.setEntryDirection(entryDx, entryDy);
+        // 3. Application des paramètres et ajout au jeu
+        newEnemy.setPosition(startX, startY);
+        newEnemy.setEntryDirection(entryDx, entryDy);
 
-        enemies.add(plant);
+        enemies.add(newEnemy);
+    }
+
+    /**
+     * Fait apparaître le Boss du niveau
+     */
+    private void spawnBoss(int levelNum) {
+        isBossActive = true; // Bloque le spawn des ennemis classiques
+
+        int bossType = levelNum - 1; // Si level 1 = type 0
+        int levelDrop = this.generateLevelDrop();
+
+        // Sécurité : si l'image du boss n'est pas chargée, on utilise la première
+        BufferedImage bossImg = bossImages[bossType];
+        if (bossImg == null) bossImg = bossImages[0];
+
+        EnemyBoss boss = new EnemyBoss(player, gp, spellManager, bossImg, bossType, levelDrop);
+
+        // On l'ajoute à la liste des ennemis
+        enemies.add(boss);
+
+        // Optionnel : Jouer un son d'alerte ou changer la musique
+        System.out.println("⚠️ ATTENTION : LE BOSS APPARAÎT ! ⚠️");
     }
 
     public Enemy getClosestEnemy(float x, float y) {

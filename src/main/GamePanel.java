@@ -54,6 +54,8 @@ public class GamePanel extends JPanel implements Runnable{
     // Le callback accepte le score (Integer) et l'état de victoire (Boolean)
     private BiConsumer<Integer, Boolean> onGameEnd;
     private boolean isGameEndTriggered = false;
+
+	public int levelNum = 1; // 1 = Forêt, 2 = Eau,
 	/**
 	 * Constructeur
 	 */
@@ -148,7 +150,8 @@ public class GamePanel extends JPanel implements Runnable{
 
 		enemySpawnTimer++;
 		if (enemySpawnTimer >= 90) {
-			m_enemyM.spawnRandomPlant();
+			m_enemyM.spawnRandomEnemy(this.levelNum);
+			//m_enemyM.spawnRandomPlant();
 			enemySpawnTimer = 0;
 		}
 

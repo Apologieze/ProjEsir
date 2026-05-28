@@ -76,7 +76,7 @@ public abstract class AnimatedEntity extends Entity {
      * et ses dimensions définies (width et height)
      */
     public void draw(Graphics2D a_g2) {
-        if (frameCounterDamage >= 0 && frameCounterDamage % 2 == 0) {
+        if (frameCounterDamage == 0 || frameCounterDamage % 3 != 0) {
 
             BufferedImage currentFrame = getCurrentFrame();
 
