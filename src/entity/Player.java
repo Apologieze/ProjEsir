@@ -37,6 +37,7 @@ public class Player extends Entity{
 		m_x = 100;
 		m_y = 100;
 		m_speed = 4;
+		m_life = 5;
 	}
 
 	/**
