@@ -179,6 +179,7 @@ public class Player extends AnimatedEntity {
 		if (frameCounterDamage <= 0){
 			life -= damage;
 			frameCounterDamage = 60;
+			manager.SoundAssetManager.playSE("Slap.wav");
 		}
 	}
 }
