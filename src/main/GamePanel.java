@@ -54,9 +54,9 @@ public class GamePanel extends JPanel implements Runnable{
 		m_keyH = new KeyHandler();
 		m_player = new Player(m_keyH);
 		m_tileM = new TileManager(this);
-		m_heart = new Heart(this, m_player, 20, 20);
-		m_xpBar = new XpBar(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
-		m_icon = new Icon(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
+		m_heart = new Heart(this, m_player, 20, SCREEN_HEIGHT - 20 - TILE_SIZE);
+		m_xpBar = new XpBar(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, SCREEN_HEIGHT - 20 - TILE_SIZE);
+		m_icon = new Icon(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, SCREEN_HEIGHT - 20 - TILE_SIZE);
 
 		m_enemyM = new manager.EnemyManager(this, m_player);
 		m_spellM = new manager.SpellManager(this, m_enemyM);
