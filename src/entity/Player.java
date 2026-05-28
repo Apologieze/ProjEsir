@@ -66,6 +66,10 @@ public class Player extends AnimatedEntity{
 			xAxis += 1;
 		}
 		move(xAxis, yAxis, speed);
+		if (keyH.nextElementClicked) {
+			this.element=(getElement()+1)%3;
+			keyH.nextElementClicked = false;
+		}
 	}
 
 	/**
