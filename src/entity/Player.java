@@ -127,18 +127,23 @@ public class Player extends AnimatedEntity {
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		// On dessine l'image
-		//a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
-		super.draw(a_g2);
+		if (frameCounterDamage >= 0 && frameCounterDamage % 2 == 0)
+		{
 
-		// On dessine le texte de level up s'il existe
-		if (lvlUpText != null) {
-			lvlUpText.draw(a_g2);
+			// On dessine l'image
+			//a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+			super.draw(a_g2);
 
-			if (!lvlUpText.isAlive()) {
-				lvlUpText = null;
+			// On dessine le texte de level up s'il existe
+			if (lvlUpText != null) {
+				lvlUpText.draw(a_g2);
+
+				if (!lvlUpText.isAlive()) {
+					lvlUpText = null;
+				}
 			}
 		}
+
 	}
 
 	public int getXp() {

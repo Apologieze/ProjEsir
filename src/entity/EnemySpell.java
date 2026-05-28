@@ -70,7 +70,7 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
 
         // If the squared distance is less than or equal to the squared combined radius, we have a hit!
         if (distSq <= combinedRadiusSq) {
-            player.setLife(player.getLife() - 1);
+            player.takeDamage(1);
             this.deactivate(); // The bullet disappears upon hitting the player
             System.out.println("Player hit! Remaining life: " + player.getLife());
         }
