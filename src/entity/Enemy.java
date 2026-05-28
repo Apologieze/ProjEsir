@@ -62,4 +62,15 @@ public abstract class Enemy extends AnimatedEntity {
         this.entryDx = dx;
         this.entryDy = dy;
     }
+
+    /**
+     * Gère la prise de dégâts de l'ennemi (sans frames d'invincibilité)
+     */
+    public void takeDamage(int damage) {
+        life -= damage;
+
+        // manager.SoundAssetManager.playSE("hit.wav");
+
+        System.out.println("Ennemi touché ! HP: " + life);
+    }
 }

@@ -105,4 +105,29 @@ public class EnemyManager {
         }
         return closest;
     }
+
+    /**
+     * Vérification de collision optimisée pour les sorts du joueur.
+     * Renvoie l'Enemy touché, ou null si rien n'est touché.
+     */
+    public Enemy checkCollision(float spellCx, float spellCy, float spellRadius) {
+        for (Enemy e : enemies) {
+            // On ignore simplement les ennemis déjà morts
+            if (e.getLife() <= 0) continue;
+
+            float dx = e.getCenterX() - spellCx;
+            float dy = e.getCenterY() - spellCy;
+            float distSq = (dx * dx) + (dy * dy);
+
+            // On donne à l'ennemi une hitbox légèrement réduite pour que ça soit juste (ex: 60%)
+            float enemyRadius = (e.getWidth() / 2.0f) * 0.6f;
+            float combinedRadius = spellRadius + enemyRadius;
+
+            // Comparaison des distances au carré
+            if (distSq <= (combinedRadius * combinedRadius)) {
+                return e; // Collision
+            }
+        }
+        return null;
+    }
 }
