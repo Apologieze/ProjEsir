@@ -15,6 +15,7 @@ public abstract class AnimatedEntity extends Entity {
     protected int animationSpeed;
     protected int currentFrameIndex = 0;
     protected int frameCounter = 0;
+    protected int frameCounterDamage = 0;
 
     /**
      * Constructeur pour une entité animée
@@ -36,6 +37,10 @@ public abstract class AnimatedEntity extends Entity {
      */
     public void updateAnimation() {
         // Sécurité au cas où le dossier est vide ou introuvable
+        if (frameCounterDamage > 0) {
+            frameCounterDamage--;
+        }
+
         if (frames == null || frames.isEmpty()) {
             return;
         }
@@ -71,11 +76,14 @@ public abstract class AnimatedEntity extends Entity {
      * et ses dimensions définies (width et height)
      */
     public void draw(Graphics2D a_g2) {
-        BufferedImage currentFrame = getCurrentFrame();
+        if (frameCounterDamage == 0 || frameCounterDamage % 3 != 0) {
 
-        // Sécurité si l'image n'a pas pu être chargée
-        if (currentFrame != null) {
-            a_g2.drawImage(currentFrame, (int)x, (int)y, width, height, null);
+            BufferedImage currentFrame = getCurrentFrame();
+
+            // Sécurité si l'image n'a pas pu être chargée
+            if (currentFrame != null) {
+                a_g2.drawImage(currentFrame, (int) x, (int) y, width, height, null);
+            }
         }
     }
 }

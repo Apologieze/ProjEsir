@@ -69,7 +69,7 @@ public class SpellManager {
      */
     private void initializePools() {
         for (int i = 0; i < MAX_PLAYER_SPELLS; i++) {
-            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0, enemyManager));
+            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0, enemyManager, player));
         }
 
         for (int i = 0; i < MAX_ENEMY_SPELLS; i++) {

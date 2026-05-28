@@ -14,6 +14,7 @@ import tile.TileManager;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.function.BiConsumer;
 import java.util.ArrayList;
 import entity.HeartItem;
 
@@ -50,10 +51,16 @@ public class GamePanel extends JPanel implements Runnable{
 	public manager.SpellManager m_spellM;
 	private int enemySpawnTimer = 0;
 
+    // Le callback accepte le score (Integer) et l'état de victoire (Boolean)
+    private BiConsumer<Integer, Boolean> onGameEnd;
+    private boolean isGameEndTriggered = false;
+
+	public int levelNum = 1; // 1 = Forêt, 2 = Eau,
 	/**
 	 * Constructeur
 	 */
-	public GamePanel() {
+    public GamePanel(BiConsumer<Integer, Boolean> onGameEnd) {
+        this.onGameEnd = onGameEnd;
 		m_FPS = 60;
 		m_keyH = new KeyHandler();
 		m_player = new Player(m_keyH);
@@ -120,16 +127,31 @@ public class GamePanel extends JPanel implements Runnable{
 	/**
 	 * Mise à jour des données des entités
 	 */
-	public void update() {
-		m_tileM.update();
-		m_player.update();
 
-		m_spellM.update();
-		m_enemyM.update();
+    public void update() {
+        // Cas de défaite : le joueur n'a plus de vie
+        if (m_player.isDead()) {
+            triggerEndGame(false);
+            return;
+        }
+
+        // Cas de victoire
+        // COMMANDE DE TEST : Déclenchement de la victoire via la touche W
+        if (m_keyH.wPressed) {
+            m_keyH.wPressed = false; // Consomme l'événement instantanément
+            triggerEndGame(true);
+            return;
+        }
+
+        m_tileM.update();
+        m_player.update();
+        m_spellM.update();
+        m_enemyM.update();
 
 		enemySpawnTimer++;
-		if (enemySpawnTimer >= 300) {
-			m_enemyM.spawnRandomPlant();
+		if (enemySpawnTimer >= 90) {
+			m_enemyM.spawnRandomEnemy(this.levelNum);
+			//m_enemyM.spawnRandomPlant();
 			enemySpawnTimer = 0;
 		}
 
@@ -145,6 +167,21 @@ public class GamePanel extends JPanel implements Runnable{
 
 		checkPlayerHeartCollisions();
 	}
+
+    /**
+     * Centralise l'interruption du thread et la notification du résultat
+     */
+    private void triggerEndGame(boolean isVictory) {
+        if (!isGameEndTriggered) {
+            isGameEndTriggered = true;
+            m_gameThread = null; // Arrêt de la boucle run()
+            // Interruption de la musique de fond
+            manager.SoundAssetManager.stopSound("BuckBumble.wav");
+            if (onGameEnd != null) {
+                onGameEnd.accept(m_player.getTotalScore(), isVictory);
+            }
+        }
+    }
 
 	/**
 	 * Affichage des éléments
@@ -178,6 +215,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 			if (playerBounds.intersects(heart.getHitbox())) {
 				if (m_player.getLife() < 9) {
+					manager.SoundAssetManager.playSE("soin.wav");
 					m_player.setLife(m_player.getLife() + 1);
 
 
@@ -193,7 +231,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void checkHeartDrop(int enemyX, int enemyY) {
 		double rand = Math.random();
 
-		// 0.15 de chance
+		// 5 % de chance de faire spawn un coeur e
 		if (rand < 0.05) {
 			heartList.add(new HeartItem(this, enemyX, enemyY));
 		}

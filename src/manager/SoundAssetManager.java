@@ -25,7 +25,7 @@ public class SoundAssetManager {
         } catch (Exception ignored) {}
 
         // Liste de tous les fichiers à charger
-        String[] bruitages = {"levelup.wav", "BuckBumble.wav", "musicBoss.wav", "Sting_em_up.wav", "bossSpawn.wav","explosion.wav", "Slap.wav"};
+        String[] bruitages = {"levelup.wav", "BuckBumble.wav", "musicBoss.wav", "Sting_em_up.wav", "bossSpawn.wav","explosion.wav", "Slap.wav", "hit.wav", "soin.wav"};
         for (String name : bruitages) {
             loadSound(name);
         }
@@ -74,6 +74,29 @@ public class SoundAssetManager {
             clip.setFramePosition(0);
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    /**
+     * Arrête la lecture d'un flux audio spécifique.
+     * @param fileName Le nom du fichier correspondant à la clé dans la Map.
+     */
+    public static void stopSound(String fileName) {
+        Clip clip = sounds.get(fileName);
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
+    }
+
+    /**
+     * Interrompt tous les flux audio actuellement en cours de lecture.
+     * Recommandé lors d'un changement majeur de panel ou d'état.
+     */
+    public static void stopAllSounds() {
+        for (Clip clip : sounds.values()) {
+            if (clip.isRunning()) {
+                clip.stop();
+            }
         }
     }
 }

@@ -9,17 +9,19 @@ public class PlayerSpell extends Entity implements ISpell {
     private float dx, dy;
     private GamePanel gp;
     private EnemyManager enemyManager; // ADDED BACK
+    private Player player;
 
     public int type;
     public int damage = 1; // Base damage of the spell
 
-    public PlayerSpell(GamePanel gp, BufferedImage preloadedImage, int type, EnemyManager enemyManager) {
+    public PlayerSpell(GamePanel gp, BufferedImage preloadedImage, int type, EnemyManager enemyManager, Player player) {
         this.gp = gp;
         this.m_idleImage = preloadedImage;
         this.type = type;
-        this.enemyManager = enemyManager; // STORE IT
+        this.enemyManager = enemyManager;
         this.speed = 10;
         this.setSize(gp.TILE_SIZE, gp.TILE_SIZE);
+        this.player = player;
     }
 
     public void configure(int newType, BufferedImage newImage) {
@@ -50,7 +52,7 @@ public class PlayerSpell extends Entity implements ISpell {
         Enemy hitEnemy = enemyManager.checkCollision(this.getCenterX(), this.getCenterY(), spellRadius);
 
         if (hitEnemy != null) {
-            hitEnemy.takeDamage(this.damage);
+            hitEnemy.takeDamage(this.damage * player.getLevel());
             this.deactivate();
         }
     }
