@@ -5,10 +5,11 @@ import java.awt.Graphics2D;
 /**
  * Represents all enemy of the game
  */
-public abstract class Enemy extends Entity{
+public abstract class Enemy extends AnimatedEntity{
     private Player player;
 
-    public Enemy(Player player){
+    public Enemy(Player player, String folderPath){
+        super(folderPath, 10);
         this.player = player;
         x = 200;
         y = 200;
