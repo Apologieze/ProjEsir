@@ -82,12 +82,19 @@ public class Player extends AnimatedEntity {
 		x = Math.max(0, Math.min(x, manager.SizeManager.SCREEN_WIDTH - SIZE));
 		y = Math.max(0, Math.min(y, manager.SizeManager.SCREEN_HEIGHT - SIZE));
 
+		tryNextElement();
+	}
+
+	/**
+	 * Essaie de passer à l'élément suivant
+	 */
+	public void tryNextElement(){
 		if (keyH.nextElementClicked) {
 			setElement((getElement() + 1) % 3);
 			keyH.nextElementClicked = false;
 		}
 	}
-
+	
 	/**
 	 * Change l'élément actuel et met à jour l'animation associée
 	 */
