@@ -10,18 +10,18 @@ import main.GamePanel;
 import main.KeyHandler;
 
 /**
- * D�fintition du comportement d'un joueur
+ * Dfintition du comportement d'un joueur
  *
  */
 public class Player extends Entity{
 
 	GamePanel m_gp;
 	KeyHandler m_keyH;
-	
+
 	/**
 	 * Constructeur de Player
 	 * @param a_gp GamePanel, pannel principal du jeu
-	 * @param a_keyH KeyHandler, gestionnaire des touches 
+	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
 	public Player(GamePanel a_gp, KeyHandler a_keyH) {
 		this.m_gp = a_gp;
@@ -29,47 +29,57 @@ public class Player extends Entity{
 		this.setDefaultValues();
 		this.getPlayerImage();
 	}
-	
+
 	/**
-	 * Initialisation des donn�es membres avec des valeurs par d�faut
+	 * Initialisation des donnes membres avec des valeurs par dfaut
 	 */
 	protected void setDefaultValues() {
 		m_x = 100;
 		m_y = 100;
 		m_speed = 4;
 	}
-	
+
 	/**
-	 * R�cup�ration de l'image du personnage
+	 * Rcupration de l'image du personnage
 	 */
 	public void getPlayerImage() {
-		//gestion des expections 
 		try {
 			m_idleImage = ImageIO.read(getClass().getResource("/player/superhero.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Mise � jour des donn�es du joueur
+	 * Mise  jour des donnes du joueur
 	 */
 	public void update() {
-		
-		
-		
+		int xAxis = 0;
+		int yAxis = 0;
+
+		if (m_keyH.upPressed) {
+			yAxis -= 1;
+		}
+		if (m_keyH.downPressed) {
+			yAxis += 1;
+		}
+		if (m_keyH.leftPressed) {
+			xAxis -= 1;
+		}
+		if (m_keyH.rightPressed) {
+			xAxis += 1;
+		}
+
+		m_x += xAxis * m_speed;
+		m_y += yAxis * m_speed;
 	}
-	
+
 	/**
-	 * Affichage du l'image du joueur dans la fen�tre du jeu
-	 * @param a_g2 Graphics2D 
+	 * Affichage du l'image du joueur dans la fentre du jeu
+	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		// r�cup�re l'image du joueur
 		BufferedImage l_image = m_idleImage;
-		// affiche le personnage avec l'image "image", avec les coordonn�es x et y, et de taille tileSize (16x16) sans �chelle, et 48x48 avec �chelle)
 		a_g2.drawImage(l_image, m_x, m_y, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
 	}
-	
-	
 }
