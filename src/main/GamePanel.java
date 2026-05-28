@@ -68,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(m_keyH);
 		this.setFocusable(true);
 		SoundAssetManager.playSE("Sting_em_up.wav");
-		SoundAssetManager.playMusicLoop("BuckBumble.wav");
+
 	}
 
 	/**
