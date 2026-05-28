@@ -19,7 +19,7 @@ public class Main {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
-		window.setTitle("ESIR1 - Projet Prog");
+		window.setTitle("Sting 'Em Up");
 
 		//Ajout du panel du jeu et démarrage du thread principal
 		GamePanel gamePanel = new GamePanel();
