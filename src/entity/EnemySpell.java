@@ -72,7 +72,7 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         float combinedRadiusSq = combinedRadius * combinedRadius;
 
         if (distSq <= combinedRadiusSq) {
-            player.setLife(player.getLife() - 1);
+            player.takeDamage(1);
             this.deactivate();
             System.out.println("Player hit! Remaining life: " + player.getLife());
         }
