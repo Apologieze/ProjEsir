@@ -21,6 +21,7 @@ public class Player extends AnimatedEntity {
 	private int nextLevelXp;
 	private Text lvlUpText;
 	private int element; // 0=fire, 1=grass, 2=water
+	private int unlokedElement;
 
 	// Tableau contenant les animations préchargées pour les 3 éléments
 	private List<BufferedImage>[] animations = new List[3];
@@ -45,6 +46,7 @@ public class Player extends AnimatedEntity {
 		this.nextLevelXp = 100;
 		this.level = 1;
 		this.element = 0;
+		this.unlokedElement = 1;
 		this.setSize(SIZE, SIZE); // On définit la taille pour l'entité
 	}
 
@@ -86,11 +88,23 @@ public class Player extends AnimatedEntity {
 	}
 
 	/**
+	 * Increment unlockedElement
+	 */
+	public void incUnlockedElement() {
+		if (this.unlokedElement <= 3) {
+			this.unlokedElement++;
+		}
+		else {
+			System.out.println("tu as débloqué plus d'élément qu'il y en as ??");
+		}
+	}	
+	
+	/**
 	 * Essaie de passer à l'élément suivant
 	 */
 	public void tryNextElement(){
 		if (keyH.nextElementClicked) {
-			setElement((getElement() + 1) % 3);
+			setElement((getElement() + 1) % this.unlokedElement);
 			keyH.nextElementClicked = false;
 		}
 	}
