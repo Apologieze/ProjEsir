@@ -72,7 +72,7 @@ public class Player extends AnimatedEntity{
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		a_g2.drawImage(getCurrentFrame(), x, y, gp.TILE_SIZE, gp.TILE_SIZE, null);
+		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, gp.TILE_SIZE, gp.TILE_SIZE, null);
 	}
 
 	public int getXp() {

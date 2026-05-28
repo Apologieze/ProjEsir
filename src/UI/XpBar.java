@@ -35,15 +35,15 @@ public class XpBar extends Position implements HUD {
 
         // Le fond de la barre
         a_g2.setColor(new Color(255, 255, 255));
-        a_g2.fillRect(this.getX(), this.getY(), this.m_largeur, this.m_hauteur);
+        a_g2.fillRect((int)this.getX(), (int)this.getY(), this.m_largeur, this.m_hauteur);
 
         // La barre
         a_g2.setColor(new Color(0, 255, 0));
-        a_g2.fillRect(this.getX(), this.getY(), currentBarWidth, this.m_hauteur);
+        a_g2.fillRect((int)this.getX(), (int)this.getY(), currentBarWidth, this.m_hauteur);
 
         //  Le contour
         a_g2.setColor(new Color(0, 0, 0));
-        a_g2.drawRect(this.getX(), this.getY(), this.m_largeur, this.m_hauteur);
+        a_g2.drawRect((int)this.getX(), (int)this.getY(), this.m_largeur, this.m_hauteur);
 
         // texte
         Font fontUI = new Font("Impact", Font.BOLD, 25);
@@ -51,8 +51,8 @@ public class XpBar extends Position implements HUD {
         a_g2.setColor(new Color(0, 0, 0));
         String texteLvl = "Lvl. " + m_player.getLevel();
         FontMetrics metrics = a_g2.getFontMetrics(fontUI);
-        int textX = this.getX() + (this.m_largeur - metrics.stringWidth(texteLvl)) / 2;
-        int textY = this.getY() + ((this.m_hauteur - metrics.getHeight()) / 2) + metrics.getAscent();
+        int textX = (int)this.getX() + (this.m_largeur - metrics.stringWidth(texteLvl)) / 2;
+        int textY = (int)this.getY() + ((this.m_hauteur - metrics.getHeight()) / 2) + metrics.getAscent();
         a_g2.drawString(texteLvl, textX, textY);
     }
 

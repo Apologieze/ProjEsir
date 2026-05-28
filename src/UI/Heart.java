@@ -28,8 +28,8 @@ public class Heart extends Position implements HUD {
         int currentLife = m_player.getLife();
 
         for (int i = 0; i < currentLife; i++) {
-            int space_x = this.getX() + (i * m_space);
-            a_g2.drawImage(m_image, space_x, this.getY(), m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
+            int space_x = (int)this.getX() + (i * m_space);
+            a_g2.drawImage(m_image, space_x, (int)this.getY(), m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
         }
     }
 }
