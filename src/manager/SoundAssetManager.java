@@ -76,4 +76,27 @@ public class SoundAssetManager {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
+
+    /**
+     * Arrête la lecture d'un flux audio spécifique.
+     * @param fileName Le nom du fichier correspondant à la clé dans la Map.
+     */
+    public static void stopSound(String fileName) {
+        Clip clip = sounds.get(fileName);
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
+    }
+
+    /**
+     * Interrompt tous les flux audio actuellement en cours de lecture.
+     * Recommandé lors d'un changement majeur de panel ou d'état.
+     */
+    public static void stopAllSounds() {
+        for (Clip clip : sounds.values()) {
+            if (clip.isRunning()) {
+                clip.stop();
+            }
+        }
+    }
 }
