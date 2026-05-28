@@ -187,4 +187,12 @@ public class Player extends AnimatedEntity {
 			manager.SoundAssetManager.playSE("Slap.wav");
 		}
 	}
+
+	public int getTotalScore(){
+		return (level-1)*(getNextLevelXp())+xp;
+	}
+
+	public boolean isDead(){
+		return life <= 0;
+	}
 }
