@@ -23,7 +23,6 @@ public class Player extends AnimatedEntity {
 	private int element; // 0=fire, 1=grass, 2=water
 
 	// Tableau contenant les animations préchargées pour les 3 éléments
-	@SuppressWarnings("unchecked")
 	private List<BufferedImage>[] animations = new List[3];
 
 	/**
@@ -80,6 +79,8 @@ public class Player extends AnimatedEntity {
 			xAxis += 1;
 		}
 		move(xAxis, yAxis, speed);
+		x = Math.max(0, Math.min(x, manager.SizeManager.SCREEN_WIDTH - SIZE));
+		y = Math.max(0, Math.min(y, manager.SizeManager.SCREEN_HEIGHT - SIZE));
 
 		if (keyH.nextElementClicked) {
 			setElement((getElement() + 1) % 3);
