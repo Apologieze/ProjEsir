@@ -70,4 +70,44 @@ public class ImageAssetManager  {
 
         return images;
     }
+
+    /**
+     * Découpe un spritesheet (feuille de sprites) en une liste d'images individuelles.
+     * Le parcours se fait de gauche à droite, puis de haut en bas.
+     * * @param path Le chemin de l'image source (ex: "/player/spritesheet.png")
+     * @param tileWidth La largeur d'une sous-image (ex: 16)
+     * @param tileHeight La hauteur d'une sous-image (ex: 16)
+     * @return Une liste contenant toutes les sous-images découpées
+     */
+    public static List<BufferedImage> loadSpritesheet(String path, int tileWidth, int tileHeight) {
+        List<BufferedImage> sprites = new ArrayList<>();
+
+        // Utilise la méthode loadImage déjà existante dans ImageAsset
+        BufferedImage spriteSheet = loadImage(path);
+
+        if (spriteSheet == null) {
+            System.err.println("Erreur : Impossible de découper le spritesheet, image source introuvable.");
+            return sprites;
+        }
+
+        // Calcul du nombre de colonnes et de lignes
+        int cols = spriteSheet.getWidth() / tileWidth;
+        int rows = spriteSheet.getHeight() / tileHeight;
+
+        // Découpage de haut en bas (y) et de gauche à droite (x)
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                // Extraction de la sous-image
+                BufferedImage subImage = spriteSheet.getSubimage(
+                        x * tileWidth,
+                        y * tileHeight,
+                        tileWidth,
+                        tileHeight
+                );
+                sprites.add(subImage);
+            }
+        }
+
+        return sprites;
+    }
 }

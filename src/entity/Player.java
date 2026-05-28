@@ -11,11 +11,9 @@ import manager.ImageAssetManager;
  * Dfintition du comportement d'un joueur
  *
  */
-public class Player extends Entity{
-
+public class Player extends AnimatedEntity{
 	GamePanel gp;
 	KeyHandler keyH;
-	private BufferedImage idleImage;
 
 	/**
 	 * Constructeur de Player
@@ -23,10 +21,10 @@ public class Player extends Entity{
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
 	public Player(GamePanel a_gp, KeyHandler a_keyH) {
+		super("/bee/fire", 10);
 		this.gp = a_gp;
 		this.keyH = a_keyH;
 		this.setDefaultValues();
-		this.idleImage = ImageAssetManager.loadImage("/player/superhero.png");
 	}
 
 	/**
@@ -43,6 +41,7 @@ public class Player extends Entity{
 	 * Mise  jour des donnes du joueur
 	 */
 	public void update() {
+		updateAnimation();
 		int xAxis = 0;
 		int yAxis = 0;
 
@@ -68,7 +67,6 @@ public class Player extends Entity{
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		BufferedImage l_image = idleImage;
-		a_g2.drawImage(l_image, x, y, gp.TILE_SIZE, gp.TILE_SIZE, null);
+		a_g2.drawImage(getCurrentFrame(), x, y, gp.TILE_SIZE, gp.TILE_SIZE, null);
 	}
 }
