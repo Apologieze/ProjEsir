@@ -2,28 +2,29 @@ package entity;
 
 import java.awt.Graphics2D;
 
+import UI.Text;
 import main.GamePanel;
 import main.KeyHandler;
+
 
 /**
  * Dfintition du comportement d'un joueur
  *
  */
 public class Player extends AnimatedEntity{
-	GamePanel gp;
+	public final int SIZE = 16 * 3;
 	KeyHandler keyH;
 	private int xp;
 	private int level;
 	private int nextLevelXp;
+	private Text lvlUpText;
 
 	/**
 	 * Constructeur de Player
-	 * @param a_gp GamePanel, pannel principal du jeu
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
-	public Player(GamePanel a_gp, KeyHandler a_keyH) {
+	public Player(KeyHandler a_keyH) {
 		super("/bee/fire", 10);
-		this.gp = a_gp;
 		this.keyH = a_keyH;
 		this.setDefaultValues();
 
@@ -70,7 +71,16 @@ public class Player extends AnimatedEntity{
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, gp.TILE_SIZE, gp.TILE_SIZE, null);
+		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+
+		if (lvlUpText != null) {
+			lvlUpText.draw(a_g2);
+
+
+			if (!lvlUpText.isAlive()) {
+				lvlUpText = null;
+			}
+		}
 	}
 
 	public int getXp() {
@@ -81,6 +91,9 @@ public class Player extends AnimatedEntity{
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
 			this.xp = (xp)%this.getNextLevelXp();
+			manager.SoundAssetManager.playSE("levelup.wav");
+			this.nextLevelXp += this.getNextLevelXp() / 2;
+			lvlUpText = new Text((int)x, (int)y - 10, "+5 ATK");
 		}
 		else {
 			this.xp = xp;
