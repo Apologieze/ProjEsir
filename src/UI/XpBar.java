@@ -33,17 +33,17 @@ public class XpBar extends Position implements HUD {
 
         int currentBarWidth = (int) (this.m_largeur * xpProgress);
 
+        a_g2.setColor(new Color(0, 0, 0));
+        a_g2.fillRect((int)this.getX() - 3, (int)this.getY() - 3, this.m_largeur + 6, this.m_hauteur + 6);
+
         // Le fond de la barre
         a_g2.setColor(new Color(255, 255, 255));
-        a_g2.fillRect((int)this.getX(), (int)this.getY(), this.m_largeur, this.m_hauteur);
+        a_g2.fillRect((int)this.getX() , (int)this.getY(), this.m_largeur, this.m_hauteur);
 
         // La barre
         a_g2.setColor(new Color(0, 255, 0));
-        a_g2.fillRect((int)this.getX(), (int)this.getY(), currentBarWidth, this.m_hauteur);
+        a_g2.fillRect((int)this.getX() , (int)this.getY(), currentBarWidth, this.m_hauteur);
 
-        //  Le contour
-        a_g2.setColor(new Color(0, 0, 0));
-        a_g2.drawRect((int)this.getX(), (int)this.getY(), this.m_largeur, this.m_hauteur);
 
         // texte
         Font fontUI = new Font("Impact", Font.BOLD, 25);
