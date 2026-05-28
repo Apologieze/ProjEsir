@@ -22,6 +22,7 @@ public class Player extends AnimatedEntity {
 	private Text lvlUpText;
 	private int element; // 0=fire, 1=grass, 2=water
 	private int unlokedElement;
+	private int frameCounterDamage;
 
 	// Tableau contenant les animations préchargées pour les 3 éléments
 	private List<BufferedImage>[] animations = new List[3];
@@ -64,6 +65,9 @@ public class Player extends AnimatedEntity {
 	 * Mise à jour des données du joueur
 	 */
 	public void update() {
+		if (frameCounterDamage > 0){
+			frameCounterDamage--;
+		}
 		updateAnimation();
 		int xAxis = 0;
 		int yAxis = 0;
@@ -165,5 +169,12 @@ public class Player extends AnimatedEntity {
 
 	public int getElement() {
 		return this.element;
+	}
+
+	public void takeDamage(int damage){
+		if (frameCounterDamage <= 0){
+			life -= damage;
+			frameCounterDamage = 60;
+		}
 	}
 }
