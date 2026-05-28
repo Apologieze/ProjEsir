@@ -53,13 +53,37 @@ public class EnemyManager {
         }
     }
 
+    public int generateLevelDrop() {
+        int playerLvl = player.getLevel();
+        double rand = Math.random(); // Génère un nombre entre 0.0 et 1.0
+
+        // Cas particulier : Si le joueur est niveau 1, il ne peut pas avoir "1 de moins"
+        if (playerLvl == 1) {
+            // On redistribue les 15% du niveau inférieur au niveau actuel (50% + 15% + 10% restants = 75%)
+            if (rand < 0.25) {
+                return playerLvl + 1; // 25% de chance d'avoir le niveau supérieur
+            } else {
+                return playerLvl;     // 75% de chance d'avoir le niveau 1
+            }
+        }
+
+        // Cas général (Joueur niveau 2 ou plus)
+        if (rand < 0.25) {
+            return playerLvl + 1;     // 25% de chance d'avoir (Niveau + 1)
+        } else if (rand < 0.40) {     // 0.25 + 0.15 = 0.40
+            return playerLvl - 1;     // 15% de chance d'avoir (Niveau - 1)
+        } else {
+            return playerLvl;         // 60% de chance d'avoir le niveau actuel (50% de base + 10% restants)
+        }
+    }
+
     /**
      * Génère une Plante avec les images préchargées
      */
     public void spawnRandomPlant() {
         //System.out.println("AJOUT D'UNE PLANTE");
         // On donne la référence des images déjà en mémoire
-        PlantEnemy plant = new PlantEnemy(player, gp, spellManager, plantFrames);
+        PlantEnemy plant = new PlantEnemy(player, gp, spellManager, plantFrames, this.generateLevelDrop());
 
         int spawnZone = (int) (Math.random() * 3);
         float startX = 0, startY = 0;
