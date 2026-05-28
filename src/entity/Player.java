@@ -27,7 +27,7 @@ public class Player extends Entity{
 		this.m_gp = a_gp;
 		this.m_keyH = a_keyH;
 		this.setDefaultValues();
-		this.getPlayerImage();
+		this.getEntityImage("/player/superhero.png");
 	}
 
 	/**
@@ -37,17 +37,7 @@ public class Player extends Entity{
 		m_x = 100;
 		m_y = 100;
 		m_speed = 4;
-	}
-
-	/**
-	 * Rcupration de l'image du personnage
-	 */
-	public void getPlayerImage() {
-		try {
-			m_idleImage = ImageIO.read(getClass().getResource("/player/superhero.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		m_life = 5;
 	}
 
 	/**

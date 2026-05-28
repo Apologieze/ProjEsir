@@ -12,6 +12,7 @@ public abstract class Entity {
 	public int m_x, m_y;				//position sur la map
 	public int m_speed;					//Déplacement de l'entité
 	public BufferedImage m_idleImage;	//Une image de l'entité
+	public int m_life;					// Point de vie de l'entité
 
     /**
      * R�cup�ration de l'image du personnage
