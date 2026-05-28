@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import UI.Heart;
 import UI.XpBar;
 import entity.Player;
+import manager.SoundAssetManager;
 import tile.TileManager;
 
 import java.awt.Graphics;
@@ -55,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setDoubleBuffered(true);
 		this.addKeyListener(m_keyH);
 		this.setFocusable(true);
+		SoundAssetManager.playMusicLoop("BuckBumble.wav");
 	}
 
 	/**
