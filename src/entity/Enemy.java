@@ -19,7 +19,9 @@ public abstract class Enemy extends AnimatedEntity{
 
     public abstract void draw(Graphics2D a_g2);
 
-    public abstract void update();
+    public  void update(){
+        updateAnimation();
+    }
 
 
 

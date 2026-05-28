@@ -6,11 +6,11 @@ import java.awt.Graphics2D;
 
 
 
-public class GrassEnemy extends Enemy{
+public class FireEnemy extends Enemy{
 
     public final int SIZE = 16 * 3;
-    public GrassEnemy(Player player){
-        super(player, "/enemy/grass");
+    public FireEnemy(Player player){
+        super(player, "/enemy/fire");
 
     }
 
@@ -23,5 +23,5 @@ public class GrassEnemy extends Enemy{
         a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
     }
 
-    
+
 }
