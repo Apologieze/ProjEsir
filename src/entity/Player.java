@@ -1,7 +1,6 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.lang.classfile.instruction.ReturnInstruction;
 
 import UI.Text;
 import main.GamePanel;
