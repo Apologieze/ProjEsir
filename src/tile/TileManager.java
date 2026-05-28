@@ -12,12 +12,16 @@ import main.GamePanel;
 import manager.ImageAssetManager;
 
 /**
- * Gestionnaire des tiles du jeu avec défilement
+ * Gestionnaire des tiles du jeu avec défilement et double couche (Base + Détails)
  */
 public class TileManager {
 	GamePanel m_gp;
 	Tile[] m_tile;
-	int m_mapTileNum[][];
+
+	// Tableaux pour les deux couches
+	int m_mapTileNum[][];       // Couche de base (sol)
+	int m_overlayTileNum[][];   // Couche de détails (arbres, buissons, etc.)
+
 	int m_mapMaxCol;
 	int m_mapMaxRow;
 
@@ -32,7 +36,9 @@ public class TileManager {
 		this.m_gp = gp;
 
 		this.getTileImage();
-		this.loadMap("/maps/map_Tile Layer 1.csv");
+
+		m_mapTileNum = this.loadMap("/maps/forest/forest1.csv");
+		m_overlayTileNum = this.loadMap("/maps/forest/forest2.csv"); // Change le nom selon ton fichier
 
 		m_cameraY = (m_mapMaxRow * m_gp.TILE_SIZE) - m_gp.SCREEN_HEIGHT;
 	}
@@ -52,9 +58,10 @@ public class TileManager {
 	}
 
 	/**
-	 * Lecture du fichier csv contenant la map de taille variable
+	 * Lecture du fichier csv et renvoie le tableau 2D généré
 	 */
-	public void loadMap(String filePath) {
+	public int[][] loadMap(String filePath) {
+		int[][] mapArray = null;
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -68,20 +75,23 @@ public class TileManager {
 			}
 			br.close();
 
+			// On définit les dimensions (on suppose que toutes les couches ont la même taille)
 			m_mapMaxCol = lines.get(0).length;
 			m_mapMaxRow = lines.size();
-			m_mapTileNum = new int[m_mapMaxCol][m_mapMaxRow];
+			mapArray = new int[m_mapMaxCol][m_mapMaxRow];
 
 			for (int row = 0; row < m_mapMaxRow; row++) {
 				String[] numbers = lines.get(row);
 				for (int col = 0; col < m_mapMaxCol; col++) {
-					m_mapTileNum[col][row] = Integer.parseInt(numbers[col]);
+					mapArray[col][row] = Integer.parseInt(numbers[col]);
 				}
 			}
 
 		} catch (Exception e) {
+			System.err.println("Erreur de chargement pour la map : " + filePath);
 			e.printStackTrace();
 		}
+		return mapArray;
 	}
 
 	/**
@@ -97,24 +107,38 @@ public class TileManager {
 	}
 
 	/**
-	 * Affichage de la carte visible à l'écran
+	 * Affichage de la carte visible à l'écran (Couche 1 puis Couche 2)
 	 * @param g2
 	 */
 	public void draw(Graphics2D g2) {
 		for (int row = 0; row < m_mapMaxRow; row++) {
 			for (int col = 0; col < m_mapMaxCol; col++) {
 
-				int tileNum = m_mapTileNum[col][row];
-
-				int worldX = col * m_gp.TILE_SIZE;
+				// Calcul de la position à l'écran pour cette ligne
 				int worldY = row * m_gp.TILE_SIZE;
-
 				int screenY = worldY - (int) m_cameraY;
 
+				// On vérifie d'abord si la ligne entière est visible à l'écran
 				if (screenY + m_gp.TILE_SIZE > 0 && screenY < m_gp.SCREEN_HEIGHT) {
-					if (m_tile[tileNum] != null && m_tile[tileNum].m_image != null) {
-						g2.drawImage(m_tile[tileNum].m_image, worldX, screenY, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
+
+					int worldX = col * m_gp.TILE_SIZE;
+
+					// --- 1. Dessin de la couche de base ---
+					int tileNumBase = m_mapTileNum[col][row];
+					// Sécurité optionnelle au cas où il y aurait aussi des trous dans la map de base
+					if (tileNumBase != -1 && m_tile[tileNumBase] != null && m_tile[tileNumBase].m_image != null) {
+						g2.drawImage(m_tile[tileNumBase].m_image, worldX, screenY, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
 					}
+
+					// --- 2. Dessin de la couche de détails (Optimisé pour ignorer le vide) ---
+					int tileNumOverlay = m_overlayTileNum[col][row];
+					// OPTIMISATION : on zappe totalement le traitement si on rencontre -1
+					if (tileNumOverlay != -1) {
+						if (m_tile[tileNumOverlay] != null && m_tile[tileNumOverlay].m_image != null) {
+							g2.drawImage(m_tile[tileNumOverlay].m_image, worldX, screenY, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
+						}
+					}
+
 				}
 			}
 		}
