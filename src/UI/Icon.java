@@ -22,8 +22,8 @@ public class Icon extends Position implements HUD {
         this.m_player = player;
 
         this.m_image_fire = ImageAssetManager.loadImage("/ui/fire_icon.png");
-        this.m_image_water = ImageAssetManager.loadImage("/ui/grass_icon.png");
-        this.m_image_grass = ImageAssetManager.loadImage("/ui/water_icon.png");
+        this.m_image_water = ImageAssetManager.loadImage("/ui/water_icon.png");
+        this.m_image_grass = ImageAssetManager.loadImage("/ui/grass_icon.png");
     }
 
     @Override
