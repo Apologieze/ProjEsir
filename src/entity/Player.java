@@ -22,6 +22,7 @@ public class Player extends AnimatedEntity {
 	private int element; // 0=fire, 1=grass, 2=water
 	private int unlokedElement;
 	private int frameCounterDamage;
+	private int damage = 10;
 
 	// --- Variables for Shooting ---
 	private SpellManager spellManager;
@@ -166,6 +167,7 @@ public class Player extends AnimatedEntity {
 	public void setXp(int xp) {
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
+			addDamage(1); //damage++
 			this.xp = (xp) % this.getNextLevelXp();
 			manager.SoundAssetManager.playSE("levelup.wav");
 			this.nextLevelXp += this.getNextLevelXp() / 2;
@@ -194,5 +196,13 @@ public class Player extends AnimatedEntity {
 
 	public boolean isDead(){
 		return life <= 0;
+	}
+
+	public void setDamage(int damage){
+		this.damage = damage;
+	}
+
+	public void addDamage(int damage){
+		this.damage += damage;
 	}
 }
