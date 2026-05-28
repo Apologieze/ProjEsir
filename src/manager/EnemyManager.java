@@ -57,7 +57,7 @@ public class EnemyManager {
      * Génère une Plante avec les images préchargées
      */
     public void spawnRandomPlant() {
-        System.out.println("AJOUT D'UNE PLANTE");
+        //System.out.println("AJOUT D'UNE PLANTE");
         // On donne la référence des images déjà en mémoire
         PlantEnemy plant = new PlantEnemy(player, gp, spellManager, plantFrames);
 

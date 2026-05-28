@@ -1,6 +1,7 @@
 package manager;
 
 import entity.EnemySpell;
+import entity.Player;
 import entity.PlayerSpell;
 import main.GamePanel;
 
@@ -16,6 +17,7 @@ public class SpellManager {
     private GamePanel gp;
 
     private EnemyManager enemyManager;
+    private Player player;
 
     // Pools d'objets
     private List<PlayerSpell> playerSpellPool;
@@ -27,9 +29,10 @@ public class SpellManager {
     private static BufferedImage[] playerSpellImages = new BufferedImage[3];
     private static List<List<BufferedImage>> enemySpellAnimations = new ArrayList<>(3);
 
-    public SpellManager(GamePanel gp, EnemyManager enemyManager) {
+    public SpellManager(GamePanel gp, EnemyManager enemyManager, Player player) {
         this.gp = gp;
         this.enemyManager = enemyManager;
+        this.player = player;
         this.playerSpellPool = new ArrayList<>(MAX_PLAYER_SPELLS);
         this.enemySpellPool = new ArrayList<>(MAX_ENEMY_SPELLS);
 
@@ -46,12 +49,12 @@ public class SpellManager {
             // Remplacer par vos chemins réels
             if (playerSpellImages[0] == null) {
                 playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
-                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
-                playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
+                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/fire.png"));
+                playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/water.png"));
 
                 enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/fire"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/water"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,7 +71,7 @@ public class SpellManager {
         }
 
         for (int i = 0; i < MAX_ENEMY_SPELLS; i++) {
-            enemySpellPool.add(new EnemySpell(gp, enemySpellAnimations.get(0), 10, 0));
+            enemySpellPool.add(new EnemySpell(gp, player, enemySpellAnimations.get(0), 10, 0));
         }
     }
 

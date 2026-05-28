@@ -59,7 +59,7 @@ public class GamePanel extends JPanel implements Runnable{
 		m_icon = new Icon(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, SCREEN_HEIGHT - 20 - TILE_SIZE);
 
 		m_enemyM = new manager.EnemyManager(this, m_player);
-		m_spellM = new manager.SpellManager(this, m_enemyM);
+		m_spellM = new manager.SpellManager(this, m_enemyM, m_player);
 		m_enemyM.setSpellManager(m_spellM);
 
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));

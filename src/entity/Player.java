@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import UI.Text;
-import main.GamePanel;
 import main.KeyHandler;
 import manager.ImageAssetManager;
 
