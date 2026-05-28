@@ -1,123 +1,122 @@
 package tile;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.GamePanel;
+import manager.ImageAssetManager;
 
 /**
- * 
- * Gestionnaire des tiles du jeu
- *
+ * Gestionnaire des tiles du jeu avec défilement
  */
 public class TileManager {
-	GamePanel m_gp;			//panel du jeu principal
-	Tile[] m_tile;			//tableau de toutes les tiles possibles dans le jeu
-	int m_maxTiles = 10;	//nombre maximum de tiles chargeable dans le jeu
-	int m_mapTileNum[][];	//r�partition des tiles dans la carte du jeu
-	
+	GamePanel m_gp;
+	Tile[] m_tile;
+	int m_mapTileNum[][];
+	int m_mapMaxCol;
+	int m_mapMaxRow;
+
+	public double m_cameraY;
+	public double m_scrollSpeed = 1.5;
+
 	/**
 	 * Constructeur
-	 * @param gp
+	 * @param gp panel du jeu principal
 	 */
 	public TileManager(GamePanel gp) {
-		this.m_gp =  gp;
-		m_tile = new Tile[m_maxTiles];
-		m_mapTileNum = new int[gp.MAX_SCREEN_COL][gp.MAX_SCREE_ROW];
+		this.m_gp = gp;
+
 		this.getTileImage();
-		this.loadMap("/maps/map2.txt");
+		this.loadMap("/maps/map_Tile Layer 1.csv");
+
+		m_cameraY = (m_mapMaxRow * m_gp.TILE_SIZE) - m_gp.SCREEN_HEIGHT;
 	}
-	
+
 	/**
-	 * Chargement de toutes les tuiles du jeu
+	 * Chargement de toutes les tuiles du jeu depuis le spritesheet
 	 */
 	public void getTileImage() {
-		try {
-			m_tile[0] = new Tile();
-			m_tile[0].m_image = ImageIO.read(getClass().getResource("/tiles/GRASS.png"));
-			
-			m_tile[1] = new Tile();
-			m_tile[1].m_image = ImageIO.read(getClass().getResource("/tiles/BRICK2.png"));
-			
-			m_tile[2] = new Tile();
-			m_tile[2].m_image = ImageIO.read(getClass().getResource("/tiles/WATER.png"));
-			
-			m_tile[3] = new Tile();
-			m_tile[3].m_image = ImageIO.read(getClass().getResource("/tiles/LAVA.png"));
-			
-			m_tile[4] = new Tile();
-			m_tile[4].m_image = ImageIO.read(getClass().getResource("/tiles/SAND.png"));
-			
-			m_tile[5] = new Tile();
-			m_tile[5].m_image = ImageIO.read(getClass().getResource("/tiles/SNOW.png"));
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		List<BufferedImage> sprites = ImageAssetManager.loadSpritesheet("/tileset/punyworld_tileset.png", 16, 16);
+
+		m_tile = new Tile[sprites.size()];
+
+		for (int i = 0; i < sprites.size(); i++) {
+			m_tile[i] = new Tile();
+			m_tile[i].m_image = sprites.get(i);
 		}
 	}
-	
+
 	/**
-	 * Lecture du fichier txt contenant la map et chargement des tuiles correspondantes.
+	 * Lecture du fichier csv contenant la map de taille variable
 	 */
 	public void loadMap(String filePath) {
-		//charger le fichier txt de la map
 		try {
-			
 			InputStream is = getClass().getResourceAsStream(filePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		
-			int col = 0;
-			int row = 0;
-			
-			// Parcourir le fichier txt pour r�cup�rer les valeurs
-			while (col < m_gp.MAX_SCREEN_COL && row < m_gp.MAX_SCREE_ROW) {
-				String line = br.readLine();
-				while (col < m_gp.MAX_SCREEN_COL) {
-					String numbers[] = line.split(" ");
-					int num = Integer.parseInt(numbers[col]);
-					m_mapTileNum [col][row] = num;
-					col++;
-				}
-				if (col == m_gp.MAX_SCREEN_COL) {
-					col = 0;
-					row ++;
+
+			List<String[]> lines = new ArrayList<>();
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				String[] numbers = line.split(",");
+				lines.add(numbers);
+			}
+			br.close();
+
+			m_mapMaxCol = lines.get(0).length;
+			m_mapMaxRow = lines.size();
+			m_mapTileNum = new int[m_mapMaxCol][m_mapMaxRow];
+
+			for (int row = 0; row < m_mapMaxRow; row++) {
+				String[] numbers = lines.get(row);
+				for (int col = 0; col < m_mapMaxCol; col++) {
+					m_mapTileNum[col][row] = Integer.parseInt(numbers[col]);
 				}
 			}
-			
-			br.close();
-		} catch (IOException e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Affichage de la carte avec les diff�rentes tuiles
+	 * Mise à jour de la position de la caméra pour le défilement
+	 */
+	public void update() {
+		m_cameraY -= m_scrollSpeed;
+
+		// Si la caméra atteint le sommet de la map...
+		if (m_cameraY <= 0) {
+			m_cameraY = (m_mapMaxRow * m_gp.TILE_SIZE) - m_gp.SCREEN_HEIGHT;
+		}
+	}
+
+	/**
+	 * Affichage de la carte visible à l'écran
 	 * @param g2
 	 */
 	public void draw(Graphics2D g2) {
-		int col = 0;
-		int row = 0;
-		int x = 0;
-		int y = 0;
-		
-		while (col < m_gp.MAX_SCREEN_COL && row < m_gp.MAX_SCREE_ROW) {
-			int tileNum = m_mapTileNum[col][row];
-			
-			g2.drawImage(m_tile[tileNum].m_image, x, y, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
-			col ++;
-			x += m_gp.TILE_SIZE;
-			if (col == m_gp.MAX_SCREEN_COL) {
-				col = 0;
-				row ++;
-				x = 0;
-				y += m_gp.TILE_SIZE;
+		for (int row = 0; row < m_mapMaxRow; row++) {
+			for (int col = 0; col < m_mapMaxCol; col++) {
+
+				int tileNum = m_mapTileNum[col][row];
+
+				int worldX = col * m_gp.TILE_SIZE;
+				int worldY = row * m_gp.TILE_SIZE;
+
+				int screenY = worldY - (int) m_cameraY;
+
+				if (screenY + m_gp.TILE_SIZE > 0 && screenY < m_gp.SCREEN_HEIGHT) {
+					if (m_tile[tileNum] != null && m_tile[tileNum].m_image != null) {
+						g2.drawImage(m_tile[tileNum].m_image, worldX, screenY, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
+					}
+				}
 			}
 		}
-		
 	}
 }
