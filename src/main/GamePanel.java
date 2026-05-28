@@ -1,9 +1,11 @@
 package main;
 
+import UI.HUD;
 import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.JPanel;
 
+import UI.Heart;
 import entity.Player;
 import tile.TileManager;
 
@@ -33,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread m_gameThread;
 	Player m_player;
 	TileManager m_tileM;
+	HUD m_HUD;
 
 	/**
 	 * Constructeur
@@ -42,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable{
 		m_keyH = new KeyHandler();
 		m_player = new Player(this, m_keyH);
 		m_tileM = new TileManager(this);
+		m_HUD = new Heart(this, m_player, 20, 20);
 
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.black);
@@ -106,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable{
 		Graphics2D g2 = (Graphics2D) g;
 		m_tileM.draw(g2);
 		m_player.draw(g2);
+		m_HUD.draw(g2);
 		g2.dispose();
 	}
 

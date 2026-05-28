@@ -5,6 +5,14 @@ package entity;
  *
  */
 public abstract class Entity extends Position {
-	public int speed;					//Déplacement de l'entité
-	public int life;					// Point de vie de l'entité
+	protected int speed;					//Déplacement de l'entité
+	protected int life;					// Point de vie de l'entité
+
+	public int getLife() {
+		return life;
+	}
+
+	public void setLife(int newLife) {
+		life = newLife;
+	}
 }
