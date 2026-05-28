@@ -71,7 +71,7 @@ public abstract class Enemy extends AnimatedEntity {
     public void takeDamage(int damage) {
         life -= damage;
 
-        // manager.SoundAssetManager.playSE("hit.wav");
+        manager.SoundAssetManager.playSE("hit.wav");
         if (life <= 0) {
             // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
             player.addXp(40);
