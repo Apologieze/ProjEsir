@@ -12,7 +12,6 @@ public class Icon extends Position implements HUD {
 
     private GamePanel m_gp;
     private Player m_player;
-    private int m_space = 35; // Espace entre chaque coeur
     private BufferedImage m_image_fire;
     private BufferedImage m_image_water;
     private BufferedImage m_image_grass;
