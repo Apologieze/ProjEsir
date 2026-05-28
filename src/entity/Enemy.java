@@ -74,9 +74,8 @@ public abstract class Enemy extends AnimatedEntity {
         manager.SoundAssetManager.playSE("hit.wav");
         if (life <= 0) {
             // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
-            player.addXp(40);
+            player.addXp(10* this.level);
             gp.checkHeartDrop((int)this.x, (int)this.y);
-            player.setXp(player.getXp() + 10 * this.level);
         }
     }
 }
