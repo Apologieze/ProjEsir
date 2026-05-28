@@ -14,6 +14,8 @@ import tile.TileManager;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import entity.HeartItem;
 
 /**
  * Panel principal du jeu contenant la map principale
@@ -30,6 +32,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL; // 768 pixels
 	public final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREE_ROW;	// 576 pixels
 
+	public ArrayList<HeartItem> heartList = new ArrayList<>();
+	private int heartSpawnTimer = 0;
 	// FPS : taux de rafraichissement
 	int m_FPS;
 
@@ -128,6 +132,18 @@ public class GamePanel extends JPanel implements Runnable{
 			m_enemyM.spawnRandomPlant();
 			enemySpawnTimer = 0;
 		}
+
+		for (int i = heartList.size() - 1; i >= 0; i--) {
+			HeartItem heart = heartList.get(i);
+			heart.update(); // Fait descendre le cœur et bouger sa hitbox
+
+			// Si le cœur dépasse le bas de l'écran, on le supprime
+			if (heart.getY() > SCREEN_HEIGHT) {
+				heartList.remove(i);
+			}
+		}
+
+		checkPlayerHeartCollisions();
 	}
 
 	/**
@@ -140,9 +156,46 @@ public class GamePanel extends JPanel implements Runnable{
 		m_heart.draw(g2);
 		m_xpBar.draw(g2);
 		m_icon.draw(g2);
+		for (int i = 0; i < heartList.size(); i++) {
+			heartList.get(i).draw(g2);
+		}
 		m_enemyM.draw(g2);
 		m_spellM.draw(g2);
 		m_player.draw(g2);
 		g2.dispose();
+	}
+
+	private void checkPlayerHeartCollisions() {
+		java.awt.Rectangle playerBounds = new java.awt.Rectangle(
+				(int)m_player.getX(),
+				(int)m_player.getY(),
+				m_player.getWidth(),
+				m_player.getHeight()
+		);
+
+		for (int i = heartList.size() - 1; i >= 0; i--) {
+			HeartItem heart = heartList.get(i);
+
+			if (playerBounds.intersects(heart.getHitbox())) {
+				if (m_player.getLife() < 9) {
+					m_player.setLife(m_player.getLife() + 1);
+
+
+					if (m_player.getLife() > 8) {
+						m_player.setLife(8);
+					}
+					heartList.remove(i);
+				}
+			}
+		}
+	}
+
+	public void checkHeartDrop(int enemyX, int enemyY) {
+		double rand = Math.random();
+
+		// 0.15 de chance
+		if (rand < 0.05) {
+			heartList.add(new HeartItem(this, enemyX, enemyY));
+		}
 	}
 }

@@ -70,7 +70,9 @@ public abstract class Enemy extends AnimatedEntity {
         life -= damage;
 
         // manager.SoundAssetManager.playSE("hit.wav");
-
-        System.out.println("Ennemi touché ! HP: " + life);
+        if (life <= 0) {
+            // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
+            gp.checkHeartDrop((int)this.x, (int)this.y);
+        }
     }
 }
