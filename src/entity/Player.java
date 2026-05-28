@@ -1,11 +1,9 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 import main.GamePanel;
 import main.KeyHandler;
-import manager.ImageAssetManager;
 
 /**
  * Dfintition du comportement d'un joueur
@@ -14,6 +12,9 @@ import manager.ImageAssetManager;
 public class Player extends AnimatedEntity{
 	GamePanel gp;
 	KeyHandler keyH;
+	private int xp;
+	private int level;
+	private int nextLevelXp;
 
 	/**
 	 * Constructeur de Player
@@ -25,6 +26,10 @@ public class Player extends AnimatedEntity{
 		this.gp = a_gp;
 		this.keyH = a_keyH;
 		this.setDefaultValues();
+
+		this.xp = 0;
+		this.nextLevelXp = 100;
+		this.level = 1;
 	}
 
 	/**
@@ -68,5 +73,23 @@ public class Player extends AnimatedEntity{
 	 */
 	public void draw(Graphics2D a_g2) {
 		a_g2.drawImage(getCurrentFrame(), x, y, gp.TILE_SIZE, gp.TILE_SIZE, null);
+	}
+
+	public int getXp() {
+		return this.xp;
+	}
+
+	public void setXp(int xp) {
+		if (xp >= this.getNextLevelXp()) {
+			this.level++;
+			this.xp = (xp)%this.getNextLevelXp();
+		}
+		else {
+			this.xp = xp;
+		}
+	}
+
+	public int getNextLevelXp() {
+		return this.nextLevelXp;
 	}
 }
