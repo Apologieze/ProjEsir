@@ -11,7 +11,7 @@ import main.KeyHandler;
  *
  */
 public class Player extends AnimatedEntity{
-	GamePanel gp;
+	public final int SIZE = 16 * 3;
 	KeyHandler keyH;
 	private int xp;
 	private int level;
@@ -19,12 +19,10 @@ public class Player extends AnimatedEntity{
 
 	/**
 	 * Constructeur de Player
-	 * @param a_gp GamePanel, pannel principal du jeu
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
-	public Player(GamePanel a_gp, KeyHandler a_keyH) {
+	public Player(KeyHandler a_keyH) {
 		super("/bee/fire", 10);
-		this.gp = a_gp;
 		this.keyH = a_keyH;
 		this.setDefaultValues();
 
@@ -71,7 +69,7 @@ public class Player extends AnimatedEntity{
 	 * @param a_g2 Graphics2D
 	 */
 	public void draw(Graphics2D a_g2) {
-		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, gp.TILE_SIZE, gp.TILE_SIZE, null);
+		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
 	}
 
 	public int getXp() {
