@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * Gestionnaire d'évènements (touche clavier)
+ * Gestionnaire d'evenements (touche clavier)
  *
  */
 public class KeyHandler implements KeyListener{
