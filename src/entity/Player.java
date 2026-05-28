@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Graphics2D;
 
+import UI.Text;
 import main.GamePanel;
 import main.KeyHandler;
 
@@ -16,6 +17,7 @@ public class Player extends AnimatedEntity{
 	private int xp;
 	private int level;
 	private int nextLevelXp;
+	private Text lvlUpText;
 
 	/**
 	 * Constructeur de Player
@@ -70,6 +72,15 @@ public class Player extends AnimatedEntity{
 	 */
 	public void draw(Graphics2D a_g2) {
 		a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+
+		if (lvlUpText != null) {
+			lvlUpText.draw(a_g2);
+
+
+			if (!lvlUpText.isAlive()) {
+				lvlUpText = null;
+			}
+		}
 	}
 
 	public int getXp() {
@@ -82,6 +93,7 @@ public class Player extends AnimatedEntity{
 			this.xp = (xp)%this.getNextLevelXp();
 			manager.SoundAssetManager.playSE("levelup.wav");
 			this.nextLevelXp += this.getNextLevelXp() / 2;
+			lvlUpText = new Text((int)x, (int)y - 10, "+5 ATK");
 		}
 		else {
 			this.xp = xp;
