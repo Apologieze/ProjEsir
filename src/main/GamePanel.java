@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import UI.Heart;
 import UI.XpBar;
+import UI.Icon;
 import entity.Player;
 import manager.SoundAssetManager;
 import tile.TileManager;
@@ -39,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
 	TileManager m_tileM;
 	HUD m_heart;
 	HUD m_xpBar;
+	HUD m_icon;
 
 	/**
 	 * Constructeur
@@ -50,6 +52,7 @@ public class GamePanel extends JPanel implements Runnable{
 		m_tileM = new TileManager(this);
 		m_heart = new Heart(this, m_player, 20, 20);
 		m_xpBar = new XpBar(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
+		m_icon = new Icon(this, m_player, SCREEN_WIDTH - 20 - 5 * TILE_SIZE, 20);
 
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.black);
@@ -118,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable{
 		m_player.draw(g2);
 		m_heart.draw(g2);
 		m_xpBar.draw(g2);
+		m_icon.draw(g2);
 		g2.dispose();
 	}
 }
