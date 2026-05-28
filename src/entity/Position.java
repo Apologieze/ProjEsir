@@ -8,11 +8,11 @@ public class Position {
         this.y = y;
     }
 
-    public int getX(int x) {
+    public int getX() {
         return this.x;
     }
 
-    public int getY(int y) {
+    public int getY() {
         return this.y;
     }
 
