@@ -62,9 +62,7 @@ public class Player extends AnimatedEntity{
 		if (keyH.rightPressed) {
 			xAxis += 1;
 		}
-
-		x += xAxis * speed;
-		y += yAxis * speed;
+		move(xAxis, yAxis, speed);
 	}
 
 	/**
