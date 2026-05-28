@@ -25,6 +25,11 @@ public abstract class AnimatedEntity extends Entity {
         this.frames = ImageAssetManager.loadImagesFromFolder(folderPath);
     }
 
+    public AnimatedEntity(List<BufferedImage> preloadedFrames, int animationSpeed) {
+        this.animationSpeed = animationSpeed;
+        this.frames = preloadedFrames;
+    }
+
     /**
      * Met à jour l'animation (à appeler à chaque tick dans la méthode update de l'entité enfant)
      */
