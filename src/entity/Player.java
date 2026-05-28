@@ -2,84 +2,202 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.util.List;
 
-import javax.imageio.ImageIO;
-
-import main.GamePanel;
+import UI.Text;
 import main.KeyHandler;
+import manager.ImageAssetManager;
+import manager.SpellManager;
 
 /**
- * Dfintition du comportement d'un joueur
- *
+ * Définition du comportement d'un joueur
  */
-public class Player extends Entity{
+public class Player extends AnimatedEntity {
+	public final int SIZE = 16 * 3;
+	KeyHandler keyH;
+	private int xp;
+	private int level;
+	private int nextLevelXp;
+	private Text lvlUpText;
+	private int element; // 0=fire, 1=grass, 2=water
+	private int unlokedElement;
+	private int frameCounterDamage;
+	private int damage = 1;
 
-	GamePanel m_gp;
-	KeyHandler m_keyH;
+
+	private SpellManager spellManager;
+	private int fireRate = 15; // The delay between each shot (15 frames = 4 shots/sec)
+	private int fireCooldown = 0;
+
+	// Tableau contenant les animations préchargées pour les 3 éléments
+	private List<BufferedImage>[] animations = new List[3];
 
 	/**
 	 * Constructeur de Player
-	 * @param a_gp GamePanel, pannel principal du jeu
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
-	public Player(GamePanel a_gp, KeyHandler a_keyH) {
-		this.m_gp = a_gp;
-		this.m_keyH = a_keyH;
+	public Player(KeyHandler a_keyH) {
+		super(ImageAssetManager.loadImagesFromFolder("/bee/fire"), 10);
+		this.keyH = a_keyH;
+
+		animations[0] = this.frames;
+		animations[1] = ImageAssetManager.loadImagesFromFolder("/bee/grass");
+		animations[2] = ImageAssetManager.loadImagesFromFolder("/bee/water");
+
 		this.setDefaultValues();
-		this.getPlayerImage();
+
+		this.xp = 0;
+		this.nextLevelXp = 100;
+		this.level = 1;
+		this.element = 0;
+		this.unlokedElement = 3;
+		this.setSize(SIZE, SIZE);
 	}
 
 	/**
-	 * Initialisation des donnes membres avec des valeurs par dfaut
+	 * Permet d'injecter le SpellManager après la création du joueur
 	 */
+	public void setSpellManager(SpellManager spellManager) {
+		this.spellManager = spellManager;
+	}
+
 	protected void setDefaultValues() {
-		m_x = 100;
-		m_y = 100;
-		m_speed = 4;
+		x = 100;
+		y = 100;
+		speed = 4;
+		life = 5;
 	}
 
-	/**
-	 * Rcupration de l'image du personnage
-	 */
-	public void getPlayerImage() {
-		try {
-			m_idleImage = ImageIO.read(getClass().getResource("/player/superhero.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Mise  jour des donnes du joueur
-	 */
 	public void update() {
+		// Damage immunity timer
+		if (frameCounterDamage > 0){
+			frameCounterDamage--;
+		}
+
+		// Shooting cooldown timer
+		if (fireCooldown > 0) {
+			fireCooldown--;
+		}
+
+		updateAnimation();
+
 		int xAxis = 0;
 		int yAxis = 0;
 
-		if (m_keyH.upPressed) {
+		if (keyH.upPressed) {
 			yAxis -= 1;
 		}
-		if (m_keyH.downPressed) {
+		if (keyH.downPressed) {
 			yAxis += 1;
 		}
-		if (m_keyH.leftPressed) {
+		if (keyH.leftPressed) {
 			xAxis -= 1;
 		}
-		if (m_keyH.rightPressed) {
+		if (keyH.rightPressed) {
 			xAxis += 1;
 		}
 
-		m_x += xAxis * m_speed;
-		m_y += yAxis * m_speed;
+		move(xAxis, yAxis, speed);
+		x = Math.max(0, Math.min(x, manager.SizeManager.SCREEN_WIDTH - SIZE));
+		y = Math.max(0, Math.min(y, manager.SizeManager.SCREEN_HEIGHT - SIZE));
+
+		tryNextElement();
+
+		if (keyH.spacePressed && fireCooldown <= 0 && spellManager != null) {
+			shoot();
+		}
 	}
 
 	/**
-	 * Affichage du l'image du joueur dans la fentre du jeu
-	 * @param a_g2 Graphics2D
+	 * Handle the creation of the player's spell
 	 */
+	private void shoot() {
+		spellManager.spawnPlayerSpell(getCenterX(), getCenterY(), this.element, 0, -1);
+
+		// Reset the cooldown
+		fireCooldown = fireRate;
+
+		// Optional: manager.SoundAssetManager.playSE("shoot.wav");
+	}
+
+	public void incUnlockedElement() {
+		if (this.unlokedElement <= 3) {
+			this.unlokedElement++;
+		}
+		else {
+			System.out.println("tu as débloqué plus d'élément qu'il y en as ??");
+		}
+	}
+
+	public void tryNextElement(){
+		if (keyH.nextElementClicked) {
+			setElement((getElement() + 1) % this.unlokedElement);
+			keyH.nextElementClicked = false;
+		}
+	}
+
+	public void setElement(int newElement) {
+		this.element = newElement;
+		this.frames = animations[newElement];
+		this.currentFrameIndex = 0;
+	}
+
 	public void draw(Graphics2D a_g2) {
-		BufferedImage l_image = m_idleImage;
-		a_g2.drawImage(l_image, m_x, m_y, m_gp.TILE_SIZE, m_gp.TILE_SIZE, null);
+		// Clignotement lors des dégats
+		if (frameCounterDamage >= 0 && frameCounterDamage % 2 == 0) {
+			super.draw(a_g2);
+
+			if (lvlUpText != null) {
+				lvlUpText.draw(a_g2);
+
+				if (!lvlUpText.isAlive()) {
+					lvlUpText = null;
+				}
+			}
+		}
+	}
+
+	public int getXp() { return this.xp; }
+
+	public void setXp(int xp) {
+		if (xp >= this.getNextLevelXp()) {
+			this.level++;
+			addDamage(1); //damage++
+			this.xp = (xp) % this.getNextLevelXp();
+			manager.SoundAssetManager.playSE("levelup.wav");
+			this.nextLevelXp += this.getNextLevelXp() / 2;
+			lvlUpText = new Text((int)x, (int)y - 10, "+1 ATK");
+		}
+		else {
+			this.xp = xp;
+		}
+	}
+
+	public int getNextLevelXp() { return this.nextLevelXp; }
+	public int getLevel() { return this.level; }
+	public int getElement() { return this.element; }
+
+	public void takeDamage(int damage){
+		if (frameCounterDamage <= 0){
+			life -= damage;
+			frameCounterDamage = 60;
+			manager.SoundAssetManager.playSE("Slap.wav");
+		}
+	}
+
+	public int getTotalScore(){
+		return (level-1)*(getNextLevelXp())+xp;
+	}
+
+	public boolean isDead(){
+		return life <= 0;
+	}
+
+	public void setDamage(int damage){
+		this.damage = damage;
+	}
+
+	public void addDamage(int damage){
+		this.damage += damage;
 	}
 }

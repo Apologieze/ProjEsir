@@ -4,12 +4,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * Gestionnaire d'évènements (touche clavier)
+ * Gestionnaire d'evenements (touche clavier)
  *
  */
 public class KeyHandler implements KeyListener{
 
-	public boolean upPressed, downPressed, leftPressed, rightPressed;
+	public boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed, nextElementPressed, nextElementClicked;
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -31,6 +31,13 @@ public class KeyHandler implements KeyListener{
 		if (code == KeyEvent.VK_D) {
 			rightPressed = true;
 		}
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
+        }
+		if (code == KeyEvent.VK_E) {
+			nextElementPressed = true;
+		}
+
 	}
 
 	@Override
@@ -48,6 +55,13 @@ public class KeyHandler implements KeyListener{
 		}
 		if (code == KeyEvent.VK_D) {
 			rightPressed = false;
+		}
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = false;
+        }
+		if (code == KeyEvent.VK_E && nextElementPressed) {
+			nextElementPressed = false;
+			nextElementClicked = true;
 		}
 	}
 }
