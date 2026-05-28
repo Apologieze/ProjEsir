@@ -70,12 +70,16 @@ public abstract class Enemy extends AnimatedEntity {
      */
     public void takeDamage(int damage) {
         life -= damage;
+        if (frameCounterDamage <= 0) {
+            super.life -= damage;
+            super.frameCounterDamage = 30;
 
-        manager.SoundAssetManager.playSE("hit.wav");
-        if (life <= 0) {
-            // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
-            player.addXp(10* this.level);
-            gp.checkHeartDrop((int)this.x, (int)this.y);
+            manager.SoundAssetManager.playSE("hit.wav");
+            if (life <= 0) {
+                // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
+                player.addXp(10 * this.level);
+                gp.checkHeartDrop((int) this.x, (int) this.y);
+            }
         }
     }
 }
