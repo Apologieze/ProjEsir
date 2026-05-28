@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import main.GamePanel;
 import main.KeyHandler;
 
+
 /**
  * Dfintition du comportement d'un joueur
  *
@@ -81,6 +82,7 @@ public class Player extends AnimatedEntity{
 		if (xp >= this.getNextLevelXp()) {
 			this.level++;
 			this.xp = (xp)%this.getNextLevelXp();
+			manager.SoundAssetManager.playSE("levelup.wav");
 		}
 		else {
 			this.xp = xp;
