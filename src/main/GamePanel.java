@@ -147,7 +147,7 @@ public class GamePanel extends JPanel implements Runnable{
         m_enemyM.update();
 
 		enemySpawnTimer++;
-		if (enemySpawnTimer >= 300) {
+		if (enemySpawnTimer >= 90) {
 			m_enemyM.spawnRandomPlant();
 			enemySpawnTimer = 0;
 		}
@@ -227,7 +227,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void checkHeartDrop(int enemyX, int enemyY) {
 		double rand = Math.random();
 
-		// 0.15 de chance
+		// 5 % de chance de faire spawn un coeur e
 		if (rand < 0.05) {
 			heartList.add(new HeartItem(this, enemyX, enemyY));
 		}

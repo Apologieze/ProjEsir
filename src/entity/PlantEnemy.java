@@ -9,13 +9,13 @@ public class PlantEnemy extends Enemy {
 
     private float moveDirX = 1.0f;
 
-    public PlantEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames) {
-        super(player, gp, spellManager, preloadedFrames);
+    public PlantEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
+        super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 0;
         this.fireRate = 120;
         this.speed = 2;
-        this.life = 15;
+        this.life = 3 * super.level;
     }
 
     @Override

@@ -25,7 +25,6 @@ public class XpBar extends Position implements HUD {
 
     @Override
     public void draw(Graphics2D a_g2) {
-        //m_player.setXp(m_player.getXp() + 1);
         int currentXp = m_player.getXp();
         int maxXp = m_player.getNextLevelXp();
 

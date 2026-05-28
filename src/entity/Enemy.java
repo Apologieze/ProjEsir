@@ -19,14 +19,16 @@ public abstract class Enemy extends AnimatedEntity {
 
     protected boolean isOnScreen = false;
     protected float entryDx, entryDy;
+    protected  int level;
 
     // Remplacement du folderPath par la liste préchargée
-    public Enemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames) {
+    public Enemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(preloadedFrames, 10); // Appel de ton constructeur optimisé !
         this.player = player;
         this.gp = gp;
         this.spellManager = spellManager;
         this.setSize(gp.TILE_SIZE, gp.TILE_SIZE);
+        this.level = level;
     }
 
     public abstract void shoot();
@@ -74,6 +76,7 @@ public abstract class Enemy extends AnimatedEntity {
             // Appelle la méthode du GamePanel avec les coordonnées de cet ennemi
             player.addXp(40);
             gp.checkHeartDrop((int)this.x, (int)this.y);
+            player.setXp(player.getXp() + 10 * this.level);
         }
     }
 }

@@ -22,7 +22,7 @@ public class Player extends AnimatedEntity {
 	private int element; // 0=fire, 1=grass, 2=water
 	private int unlokedElement;
 	private int frameCounterDamage;
-	private int damage = 1;
+	private int damage;
 
 
 	private SpellManager spellManager;
@@ -47,11 +47,12 @@ public class Player extends AnimatedEntity {
 		this.setDefaultValues();
 
 		this.xp = 0;
-		this.nextLevelXp = 100;
+		this.nextLevelXp = 50;
 		this.level = 1;
 		this.element = 0;
 		this.unlokedElement = 3;
 		this.setSize(SIZE, SIZE);
+		damage = 1;
 	}
 
 	/**
