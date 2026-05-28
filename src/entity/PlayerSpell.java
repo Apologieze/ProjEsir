@@ -2,56 +2,45 @@ package entity;
 
 import java.awt.image.BufferedImage;
 import main.GamePanel;
-import manager.EnemyManager;
 
 public class PlayerSpell extends Entity implements ISpell {
     private boolean active = false;
     private float dx, dy;
     private GamePanel gp;
-    private EnemyManager enemyManager;
-    public final int type;
 
-    public PlayerSpell(GamePanel gp, BufferedImage preloadedImage, int type, EnemyManager enemyManager) {
+    public int type;
+
+    public PlayerSpell(GamePanel gp, BufferedImage preloadedImage, int type) {
         this.gp = gp;
-        this.m_idleImage = preloadedImage; // Utilise la variable de la classe mère Entity
+        this.m_idleImage = preloadedImage;
         this.type = type;
-        this.speed = 6;
-        this.enemyManager = enemyManager;
-        this.setSize(gp.TILE_SIZE, gp.TILE_SIZE); // Initialise la taille
+        this.speed = 10; // You might want to increase this so player bullets feel fast!
+        this.setSize(gp.TILE_SIZE, gp.TILE_SIZE);
+    }
+
+    public void configure(int newType, BufferedImage newImage) {
+        this.type = newType;
+        this.m_idleImage = newImage;
     }
 
     @Override
     public void spawn(float startX, float startY, float dirX, float dirY) {
-        this.x = startX;
-        this.y = startY;
+        // Center the spell perfectly
+        this.x = startX - (this.width / 2.0f);
+        this.y = startY - (this.height / 2.0f);
         this.active = true;
 
-        Enemy target = enemyManager.getClosestEnemy(this.x, this.y);
-
-        if (target != null) {
-            // Calcule la distance entre le sort et l'ennemi
-            float distX = target.getCenterX() - this.getCenterX();
-            float distY = target.getCenterY() - this.getCenterY();
-            float distance = (float) Math.sqrt(distX * distX + distY * distY);
-
-            // Normalise le vecteur de direction (pour que le sort aille à vitesse constante)
-            if (distance != 0) {
-                this.dx = distX / distance;
-                this.dy = distY / distance;
-            }
-        } else {
-            // S'il n'y a aucun ennemi à l'écran, tire tout droit selon les inputs de base
-            this.dx = dirX;
-            this.dy = dirY;
-        }
+        // Simply set the direction to exactly what was asked (0, -1 for straight up)
+        this.dx = dirX;
+        this.dy = dirY;
     }
 
     @Override
     public void update() {
         if (!active) return;
-
         move(dx, dy, speed);
 
+        // Deactivate if it goes off-screen
         if (x < 0 || x > gp.SCREEN_WIDTH || y < 0 || y > gp.SCREEN_HEIGHT) {
             deactivate();
         }

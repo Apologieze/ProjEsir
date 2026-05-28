@@ -29,6 +29,9 @@ public class SpellManager {
     private static BufferedImage[] playerSpellImages = new BufferedImage[3];
     private static List<List<BufferedImage>> enemySpellAnimations = new ArrayList<>(3);
 
+    private final int[] enemySpellMoveSpeeds = {6, 6, 3}; // Type 1 is fast, Type 2 is slow
+    private final int[] enemySpellAnimSpeeds = {3, 5, 12}; // Type 1 animates twice as fast
+
     public SpellManager(GamePanel gp, EnemyManager enemyManager, Player player) {
         this.gp = gp;
         this.enemyManager = enemyManager;
@@ -67,7 +70,7 @@ public class SpellManager {
     private void initializePools() {
         for (int i = 0; i < MAX_PLAYER_SPELLS; i++) {
             // On passe le enemyManager au sort
-            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0, enemyManager));
+            playerSpellPool.add(new PlayerSpell(gp, playerSpellImages[0], 0));
         }
 
         for (int i = 0; i < MAX_ENEMY_SPELLS; i++) {
@@ -76,21 +79,28 @@ public class SpellManager {
     }
 
     /**
-     * Recherche un sort inactif dans le pool et l'active.
+     * Recherche un sort inactif dans le pool, le reconfigure, et l'active.
      */
     public void spawnPlayerSpell(float x, float y, int type, float dirX, float dirY) {
         for (PlayerSpell spell : playerSpellPool) {
-            if (!spell.isActive() && spell.type == type) {
+            if (!spell.isActive()) {
+                // Reconfigure the object with the correct image before firing
+                spell.configure(type, playerSpellImages[type]);
                 spell.spawn(x, y, dirX, dirY);
-                return; // Sort trouvé et activé, fin de l'opération
+                return;
             }
         }
-        // Optionnel : Gérer le cas où le pool est vide (agrandir le pool ou ignorer le tir)
     }
 
     public void spawnEnemySpell(float x, float y, int type, float dirX, float dirY) {
         for (EnemySpell spell : enemySpellPool) {
-            if (!spell.isActive() && spell.type == type) {
+            if (!spell.isActive()) {
+                // Fetch the custom speeds based on the type requested
+                int moveSpeed = enemySpellMoveSpeeds[type];
+                int animSpeed = enemySpellAnimSpeeds[type];
+
+                // Reconfigure the object before firing
+                spell.configure(type, enemySpellAnimations.get(type), animSpeed, moveSpeed);
                 spell.spawn(x, y, dirX, dirY);
                 return;
             }

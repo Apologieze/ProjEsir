@@ -7,10 +7,10 @@ import java.util.List;
 import UI.Text;
 import main.KeyHandler;
 import manager.ImageAssetManager;
+import manager.SpellManager;
 
 /**
  * Définition du comportement d'un joueur
- *
  */
 public class Player extends AnimatedEntity {
 	public final int SIZE = 16 * 3;
@@ -23,6 +23,11 @@ public class Player extends AnimatedEntity {
 	private int unlokedElement;
 	private int frameCounterDamage;
 
+	// --- Variables for Shooting ---
+	private SpellManager spellManager;
+	private int fireRate = 15; // The delay between each shot (15 frames = 4 shots/sec at 60fps)
+	private int fireCooldown = 0;
+
 	// Tableau contenant les animations préchargées pour les 3 éléments
 	private List<BufferedImage>[] animations = new List[3];
 
@@ -31,11 +36,9 @@ public class Player extends AnimatedEntity {
 	 * @param a_keyH KeyHandler, gestionnaire des touches
 	 */
 	public Player(KeyHandler a_keyH) {
-		// On charge le feu par défaut via le constructeur parent
 		super(ImageAssetManager.loadImagesFromFolder("/bee/fire"), 10);
 		this.keyH = a_keyH;
 
-		// Préchargement des 3 éléments en mémoire
 		animations[0] = this.frames;
 		animations[1] = ImageAssetManager.loadImagesFromFolder("/bee/grass");
 		animations[2] = ImageAssetManager.loadImagesFromFolder("/bee/water");
@@ -47,12 +50,16 @@ public class Player extends AnimatedEntity {
 		this.level = 1;
 		this.element = 0;
 		this.unlokedElement = 1;
-		this.setSize(SIZE, SIZE); // On définit la taille pour l'entité
+		this.setSize(SIZE, SIZE);
 	}
 
 	/**
-	 * Initialisation des données membres avec des valeurs par défaut
+	 * Permet d'injecter le SpellManager après la création du joueur
 	 */
+	public void setSpellManager(SpellManager spellManager) {
+		this.spellManager = spellManager;
+	}
+
 	protected void setDefaultValues() {
 		x = 100;
 		y = 100;
@@ -60,14 +67,19 @@ public class Player extends AnimatedEntity {
 		life = 5;
 	}
 
-	/**
-	 * Mise à jour des données du joueur
-	 */
 	public void update() {
+		// Damage immunity timer
 		if (frameCounterDamage > 0){
 			frameCounterDamage--;
 		}
+
+		// Shooting cooldown timer
+		if (fireCooldown > 0) {
+			fireCooldown--;
+		}
+
 		updateAnimation();
+
 		int xAxis = 0;
 		int yAxis = 0;
 
@@ -83,16 +95,35 @@ public class Player extends AnimatedEntity {
 		if (keyH.rightPressed) {
 			xAxis += 1;
 		}
+
 		move(xAxis, yAxis, speed);
 		x = Math.max(0, Math.min(x, manager.SizeManager.SCREEN_WIDTH - SIZE));
 		y = Math.max(0, Math.min(y, manager.SizeManager.SCREEN_HEIGHT - SIZE));
 
 		tryNextElement();
+
+		// --- Shooting Logic ---
+		// Check if space is pressed, cooldown is over, and spellManager is linked
+		if (keyH.spacePressed && fireCooldown <= 0 && spellManager != null) {
+			shoot();
+		}
 	}
 
 	/**
-	 * Increment unlockedElement
+	 * Handle the creation of the player's spell
 	 */
+	private void shoot() {
+		// Fire the spell.
+		// We pass this.element as the type.
+		// 0, -1 is the default direction (straight up) if no enemies are found by the auto-aim.
+		spellManager.spawnPlayerSpell(getCenterX(), getCenterY(), this.element, 0, -1);
+
+		// Reset the cooldown
+		fireCooldown = fireRate;
+
+		// Optional: manager.SoundAssetManager.playSE("shoot.wav");
+	}
+
 	public void incUnlockedElement() {
 		if (this.unlokedElement <= 3) {
 			this.unlokedElement++;
@@ -100,41 +131,26 @@ public class Player extends AnimatedEntity {
 		else {
 			System.out.println("tu as débloqué plus d'élément qu'il y en as ??");
 		}
-	}	
-	
-	/**
-	 * Essaie de passer à l'élément suivant
-	 */
+	}
+
 	public void tryNextElement(){
 		if (keyH.nextElementClicked) {
 			setElement((getElement() + 1) % this.unlokedElement);
 			keyH.nextElementClicked = false;
 		}
 	}
-	
-	/**
-	 * Change l'élément actuel et met à jour l'animation associée
-	 */
+
 	public void setElement(int newElement) {
 		this.element = newElement;
-		// On remplace la liste d'images utilisée par AnimatedEntity
 		this.frames = animations[newElement];
 		this.currentFrameIndex = 0;
 	}
 
-	/**
-	 * Affichage de l'image du joueur dans la fenêtre du jeu
-	 * @param a_g2 Graphics2D
-	 */
 	public void draw(Graphics2D a_g2) {
-		if (frameCounterDamage >= 0 && frameCounterDamage % 2 == 0)
-		{
-
-			// On dessine l'image
-			//a_g2.drawImage(getCurrentFrame(), (int)x, (int)y, SIZE, SIZE, null);
+		// Clignotement lors des dégats
+		if (frameCounterDamage >= 0 && frameCounterDamage % 2 == 0) {
 			super.draw(a_g2);
 
-			// On dessine le texte de level up s'il existe
 			if (lvlUpText != null) {
 				lvlUpText.draw(a_g2);
 
@@ -143,12 +159,9 @@ public class Player extends AnimatedEntity {
 				}
 			}
 		}
-
 	}
 
-	public int getXp() {
-		return this.xp;
-	}
+	public int getXp() { return this.xp; }
 
 	public void setXp(int xp) {
 		if (xp >= this.getNextLevelXp()) {
@@ -163,17 +176,9 @@ public class Player extends AnimatedEntity {
 		}
 	}
 
-	public int getNextLevelXp() {
-		return this.nextLevelXp;
-	}
-
-	public int getLevel() {
-		return this.level;
-	}
-
-	public int getElement() {
-		return this.element;
-	}
+	public int getNextLevelXp() { return this.nextLevelXp; }
+	public int getLevel() { return this.level; }
+	public int getElement() { return this.element; }
 
 	public void takeDamage(int damage){
 		if (frameCounterDamage <= 0){

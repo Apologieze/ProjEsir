@@ -8,8 +8,10 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
     private boolean active = false;
     private float dx, dy;
     private GamePanel gp;
-    private Player player; // Reference to the player for collision
-    public final int type;
+    private Player player;
+
+    // REMOVED 'final' so the pool can re-use and reassign the type
+    public int type;
 
     private final float HITBOX_SCALE = 0.4f;
 
@@ -22,10 +24,21 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         this.setSize(gp.TILE_SIZE, gp.TILE_SIZE);
     }
 
+    /**
+     * Reconfigures the spell's properties before it is fired from the pool.
+     */
+    public void configure(int newType, List<BufferedImage> newFrames, int newAnimSpeed, int newMoveSpeed) {
+        this.type = newType;
+        this.frames = newFrames;
+        this.animationSpeed = newAnimSpeed;
+        this.speed = newMoveSpeed;
+    }
+
     @Override
     public void spawn(float startX, float startY, float dirX, float dirY) {
-        this.x = startX;
-        this.y = startY;
+        this.x = startX - (this.width / 2.0f);
+        this.y = startY - (this.height / 2.0f);
+
         this.dx = dirX;
         this.dy = dirY;
         this.active = true;
@@ -39,39 +52,28 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         updateAnimation();
         move(dx, dy, speed);
 
-        // 1. Check if the spell went off-screen
         if (x < 0 || x > gp.SCREEN_WIDTH || y < 0 || y > gp.SCREEN_HEIGHT) {
             deactivate();
-            return; // Stop executing if deactivated
+            return;
         }
 
-        // 2. Check collision with the player
         checkCollision();
     }
 
-    /**
-     * Highly optimized circular collision check (no square roots)
-     */
     private void checkCollision() {
-        // Calculate distance between centers
         float deltaX = this.getCenterX() - player.getCenterX();
         float deltaY = this.getCenterY() - player.getCenterY();
-
-        // Calculate squared distance
         float distSq = (deltaX * deltaX) + (deltaY * deltaY);
 
-        // Calculate radii based on the entity width and the hitbox scale
         float myRadius = (this.width / 2.0f) * HITBOX_SCALE;
         float playerRadius = (player.getWidth() / 2.0f) * HITBOX_SCALE;
 
-        // Calculate combined radius squared
         float combinedRadius = myRadius + playerRadius;
         float combinedRadiusSq = combinedRadius * combinedRadius;
 
-        // If the squared distance is less than or equal to the squared combined radius, we have a hit!
         if (distSq <= combinedRadiusSq) {
-            player.takeDamage(1);
-            this.deactivate(); // The bullet disappears upon hitting the player
+            player.setLife(player.getLife() - 1);
+            this.deactivate();
             System.out.println("Player hit! Remaining life: " + player.getLife());
         }
     }
