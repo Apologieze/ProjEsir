@@ -22,11 +22,11 @@ public class Player extends AnimatedEntity {
 	private int element; // 0=fire, 1=grass, 2=water
 	private int unlokedElement;
 	private int frameCounterDamage;
-	private int damage = 10;
+	private int damage = 1;
 
-	// --- Variables for Shooting ---
+
 	private SpellManager spellManager;
-	private int fireRate = 15; // The delay between each shot (15 frames = 4 shots/sec at 60fps)
+	private int fireRate = 15; // The delay between each shot (15 frames = 4 shots/sec)
 	private int fireCooldown = 0;
 
 	// Tableau contenant les animations préchargées pour les 3 éléments
@@ -50,7 +50,7 @@ public class Player extends AnimatedEntity {
 		this.nextLevelXp = 100;
 		this.level = 1;
 		this.element = 0;
-		this.unlokedElement = 1;
+		this.unlokedElement = 3;
 		this.setSize(SIZE, SIZE);
 	}
 
@@ -103,8 +103,6 @@ public class Player extends AnimatedEntity {
 
 		tryNextElement();
 
-		// --- Shooting Logic ---
-		// Check if space is pressed, cooldown is over, and spellManager is linked
 		if (keyH.spacePressed && fireCooldown <= 0 && spellManager != null) {
 			shoot();
 		}
@@ -114,9 +112,6 @@ public class Player extends AnimatedEntity {
 	 * Handle the creation of the player's spell
 	 */
 	private void shoot() {
-		// Fire the spell.
-		// We pass this.element as the type.
-		// 0, -1 is the default direction (straight up) if no enemies are found by the auto-aim.
 		spellManager.spawnPlayerSpell(getCenterX(), getCenterY(), this.element, 0, -1);
 
 		// Reset the cooldown

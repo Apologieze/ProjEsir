@@ -51,8 +51,8 @@ public class SpellManager {
         try {
             // Remplacer par vos chemins réels
             if (playerSpellImages[0] == null) {
-                playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
-                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/fire.png"));
+                playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/fire.png"));
+                playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));
                 playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/water.png"));
 
                 enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
