@@ -25,7 +25,7 @@ public class SoundAssetManager {
         } catch (Exception ignored) {}
 
         // Liste de tous les fichiers à charger
-        String[] bruitages = {"levelup.wav", "BuckBumble.wav", "musicBoss.wav", "Sting_em_up.wav", "bossSpawn.wav","explosion.wav", "Slap.wav", "hit.wav", "soin.wav"};
+        String[] bruitages = {"levelup.wav", "BuckBumble.wav", "musicBoss.wav", "Sting_em_up.wav", "bossSpawn.wav","explosion.wav", "Slap.wav", "hit.wav", "soin.wav", "bossShoot.wav"};
         for (String name : bruitages) {
             loadSound(name);
         }

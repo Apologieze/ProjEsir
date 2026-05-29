@@ -177,7 +177,7 @@ public class EnemyManager {
         enemies.add(boss);
 
         // Changement de la musique
-        manager.SoundAssetManager.stopSound("BuckBumble.wav");
+        manager.SoundAssetManager.stopAllSounds();
         manager.SoundAssetManager.playSE("bossSpawn.wav");
         manager.SoundAssetManager.playMusicLoop("musicBoss.wav");
     }

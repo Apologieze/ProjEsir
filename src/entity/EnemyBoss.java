@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EnemyBoss extends Enemy {
 
-    private int numProjectiles = 16; // Le nombre de tirs dans le cercle (tu peux l'augmenter !)
+    private int numProjectiles = 16; // Le nombre de tirs dans le cercle
 
     public EnemyBoss(Player player, GamePanel gp, SpellManager spellManager, BufferedImage bossImage, int type, int levelDrop) {
         super(player, gp, spellManager, createSingleFrameList(bossImage), levelDrop);
@@ -16,9 +16,9 @@ public class EnemyBoss extends Enemy {
         this.type = type;
         this.fireRate = 90; // Tire toutes les 1,5 secondes
         this.speed = 0;     // Le boss reste immobile au centre
-        this.life = 15;    // Beaucoup de PV pour un boss
+        this.life = 150;    // Beaucoup de PV pour un boss
 
-        // Taille spécifique du boss (64x96)
+        // Taille du boss (64x96)
         this.setSize(64*2, 96*2);
 
         this.x = (gp.SCREEN_WIDTH / 2.0f) - (this.width / 2.0f);
@@ -38,14 +38,14 @@ public class EnemyBoss extends Enemy {
 
     @Override
     public void moveOnScreen() {
-        // Le boss reste fixe. Tu pourrais ajouter un petit mouvement de lévitation ici plus tard !
+        // Le boss reste fixe
     }
 
     @Override
     public void shoot() {
-        // Tir en forme de cercle (Nova) grâce à la trigonométrie
+        // Tir en forme de cercle
         for (int i = 0; i < numProjectiles; i++) {
-            // Calcule l'angle pour répartir uniformément les tirs sur 360° (2*PI radians)
+            // Calcule l'angle pour répartir uniformément les tirs sur 2 pi radians
             double angle = (2 * Math.PI / numProjectiles) * i;
 
             // Convertit l'angle en vecteur de direction (Cos = X, Sin = Y)
@@ -56,7 +56,7 @@ public class EnemyBoss extends Enemy {
             spellManager.spawnEnemySpell(getCenterX(), getCenterY(), this.type, dirX, dirY);
         }
 
-        // Optionnel : un gros son pour le tir du boss !
-        // manager.SoundAssetManager.playSE("boss_shoot.wav");
+        // Son pour tir du boss
+        manager.SoundAssetManager.playSE("bossShoot.wav");
     }
 }
