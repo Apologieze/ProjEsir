@@ -59,6 +59,9 @@ public class EnemyManager {
             if (e.getLife() <= 0) {
                 if (e instanceof EnemyBoss) {
                     System.out.println("LE BOSS EST MORT ! NIVEAU TERMINÉ !");
+                    setBossActive(false);
+                    normalEnemiesSpawned = 0;
+                    gp.nextLevelNum(); // Passe au niveau suivant
                 }
                 enemies.remove(i);
             }
@@ -157,7 +160,7 @@ public class EnemyManager {
      * Fait apparaître le Boss du niveau
      */
     private void spawnBoss(int levelNum) {
-        isBossActive = true; // Bloque le spawn des ennemis classiques
+        setBossActive(true); // Bloque le spawn des ennemis classiques
 
         int bossType = levelNum - 1; // Si level 1 = type 0
         int levelDrop = this.generateLevelDrop();
@@ -215,5 +218,9 @@ public class EnemyManager {
             }
         }
         return null;
+    }
+
+    public void setBossActive(boolean bossActive) {
+        isBossActive = bossActive;
     }
 }

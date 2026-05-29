@@ -236,4 +236,12 @@ public class GamePanel extends JPanel implements Runnable{
 			heartList.add(new HeartItem(this, enemyX, enemyY));
 		}
 	}
+
+	public void setLevelNum(int levelNum) {
+		this.levelNum = levelNum;
+	}
+
+	public void nextLevelNum(){
+		this.levelNum++;
+	}
 }
