@@ -59,6 +59,8 @@ public class EnemyManager {
             if (e.getLife() <= 0) {
                 if (e instanceof EnemyBoss) {
                     System.out.println("LE BOSS EST MORT ! NIVEAU TERMINÉ !");
+                    manager.SoundAssetManager.stopSound("musicBoss.wav");
+                    manager.SoundAssetManager.playMusicLoop("BuckBumble.wav");
                     setBossActive(false);
                     normalEnemiesSpawned = 0;
                     gp.nextLevelNum(); // Passe au niveau suivant
@@ -107,7 +109,7 @@ public class EnemyManager {
         normalEnemiesSpawned++;
 
         // Si on a atteint les 30 ennemis, on lance le boss au lieu d'un ennemi normal
-        if (normalEnemiesSpawned >= 5) {
+        if (normalEnemiesSpawned == 5) {
             spawnBoss(levelNum);
             return; // On sort de la méthode pour ne pas faire spawner de mob normal
         }
@@ -165,7 +167,7 @@ public class EnemyManager {
         int bossType = levelNum - 1; // Si level 1 = type 0
         int levelDrop = this.generateLevelDrop();
 
-        // Sécurité : si l'image du boss n'est pas chargée, on utilise la première
+        // Si l'image du boss n'est pas chargée, on utilise la première
         BufferedImage bossImg = bossImages[bossType];
         if (bossImg == null) bossImg = bossImages[0];
 
@@ -174,8 +176,10 @@ public class EnemyManager {
         // On l'ajoute à la liste des ennemis
         enemies.add(boss);
 
-        // Optionnel : Jouer un son d'alerte ou changer la musique
-        System.out.println("⚠️ ATTENTION : LE BOSS APPARAÎT ! ⚠️");
+        // Changement de la musique
+        manager.SoundAssetManager.stopSound("BuckBumble.wav");
+        manager.SoundAssetManager.playSE("bossSpawn.wav");
+        manager.SoundAssetManager.playMusicLoop("musicBoss.wav");
     }
 
     public Enemy getClosestEnemy(float x, float y) {
