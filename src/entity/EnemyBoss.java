@@ -27,7 +27,25 @@ public class EnemyBoss extends Enemy {
         this.y = (gp.SCREEN_HEIGHT / 2.0f) - (this.height / 2.0f);
 
         this.isOnScreen = true;
-        this.bossBar = new BossBar(gp, this, "boss", this.life);
+
+        String bossName = "";
+        switch (this.type) {
+            case 0:
+                bossName = "Boss de la Forêt";
+                break;
+            case 1:
+                bossName = "Boss de l'Eau";
+                break;
+            case 2:
+                bossName = "Boss de Feu";
+                break;
+            default:
+                bossName = "Boss";
+                break;
+        }
+
+        // On passe le nom dynamique à la barre de vie
+        this.bossBar = new BossBar(gp, this, bossName, this.life);
     }
 
 

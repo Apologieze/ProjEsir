@@ -50,7 +50,7 @@ public class Player extends AnimatedEntity {
 		this.nextLevelXp = 50;
 		this.level = 1;
 		this.element = 0;
-		this.unlokedElement = 3;
+		this.unlokedElement = 1;
 		this.setSize(SIZE, SIZE);
 		damage = 1;
 	}
