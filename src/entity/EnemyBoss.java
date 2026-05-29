@@ -1,6 +1,7 @@
 package entity;
 
 import main.GamePanel;
+import UI.BossBar;
 import manager.SpellManager;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 public class EnemyBoss extends Enemy {
 
     private int numProjectiles = 16; // Le nombre de tirs dans le cercle (tu peux l'augmenter !)
+    private BossBar bossBar;
 
     public EnemyBoss(Player player, GamePanel gp, SpellManager spellManager, BufferedImage bossImage, int type, int levelDrop) {
         super(player, gp, spellManager, createSingleFrameList(bossImage), levelDrop);
@@ -25,7 +27,10 @@ public class EnemyBoss extends Enemy {
         this.y = (gp.SCREEN_HEIGHT / 2.0f) - (this.height / 2.0f);
 
         this.isOnScreen = true;
+        this.bossBar = new BossBar(gp, this, "boss", this.life);
     }
+
+
 
     /**
      * Astuce pour rendre compatible une image fixe avec le système AnimatedEntity
@@ -58,5 +63,18 @@ public class EnemyBoss extends Enemy {
 
         // Son pour tir du boss
         manager.SoundAssetManager.playSE("bossShoot.wav");
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        super.takeDamage(damage);
+        //appel de draw() de BossBar
+        if (life>0 && bossBar != null){
+            bossBar.update();
+        }
+    }
+
+    public BossBar getBossBar(){
+        return bossBar;
     }
 }

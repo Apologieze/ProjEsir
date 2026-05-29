@@ -4,6 +4,8 @@ import UI.Text;
 import entity.*;
 import main.GamePanel;
 
+import entity.EnemyBoss;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -78,6 +80,13 @@ public class EnemyManager {
     public void draw(Graphics2D g2) {
         for (Enemy e : enemies) {
             e.draw(g2);
+            // Si l'ennemi est le Boss, on dessine sa barre de vie par-dessus le reste
+            if (e instanceof EnemyBoss) {
+                EnemyBoss boss = (EnemyBoss) e;
+                if (boss.getBossBar() != null) {
+                    boss.getBossBar().draw(g2);
+                }
+            }
         }
         if (!isBossActive && bossMortCounter > 0) {
             bossMortCounter--;
