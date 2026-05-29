@@ -1,5 +1,6 @@
 package manager;
 
+import UI.Text;
 import entity.*;
 import main.GamePanel;
 
@@ -21,6 +22,8 @@ public class EnemyManager {
 
     private int normalEnemiesSpawned = 0;
     private boolean isBossActive = false;
+    private int bossMortCounter = 0;
+    private Text textBossMort;
 
      //(0=Forêt, 1=Eau, 2=feu, selon tes types)
     private BufferedImage[] bossImages = new BufferedImage[3];
@@ -59,10 +62,11 @@ public class EnemyManager {
             e.update();
             if (e.getLife() <= 0) {
                 if (e instanceof EnemyBoss) {
-                    System.out.println("LE BOSS EST MORT ! NIVEAU TERMINÉ !");
                     manager.SoundAssetManager.stopSound("musicBoss.wav");
                     manager.SoundAssetManager.playMusicLoop("BuckBumble.wav");
                     setBossActive(false);
+                    bossMortCounter = 60;
+                    textBossMort = new Text(gp.SCREEN_WIDTH / 8, 200, "LE BOSS EST MORT ! NIVEAU TERMINÉ !", 35, 1000);
                     normalEnemiesSpawned = 0;
                     gp.nextLevelNum(); // Passe au niveau suivant
                 }
@@ -74,6 +78,10 @@ public class EnemyManager {
     public void draw(Graphics2D g2) {
         for (Enemy e : enemies) {
             e.draw(g2);
+        }
+        if (!isBossActive && bossMortCounter > 0) {
+            bossMortCounter--;
+            textBossMort.draw(g2);
         }
     }
 
