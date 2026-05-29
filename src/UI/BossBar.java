@@ -33,20 +33,20 @@ public class BossBar implements HUD {
 
     @Override
     public void draw(Graphics2D a_g2) {
-        Font fontUI = new Font("Impact", Font.BOLD, 25);
+        Font fontUI = new Font("Impact", Font.BOLD, 29);
         a_g2.setFont(fontUI);
         a_g2.setColor(Color.WHITE);
 
         FontMetrics metrics = a_g2.getFontMetrics(fontUI);
         int textX = m_gp.SCREEN_WIDTH / 2 - metrics.stringWidth(name) / 2;
-        a_g2.drawString(name, textX, 45);
+        a_g2.drawString(name, textX, 30);
 
         // Fond noir
         a_g2.setColor(Color.BLACK);
-        a_g2.fillRect(x, 55, barWidth, 22);
+        a_g2.fillRect(x, 40, barWidth, 22);
 
         // Intérieur rouge (utilise la variable calculée dans update())
         a_g2.setColor(Color.RED);
-        a_g2.fillRect(x, 55, currentBarWidth, 22);
+        a_g2.fillRect(x, 40, currentBarWidth, 22);
     }
 }

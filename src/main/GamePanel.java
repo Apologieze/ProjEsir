@@ -335,6 +335,11 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 
 	public void nextLevelNum(){
+		if (levelNum >= 3) {
+			System.out.println("Jeu fini");
+			triggerEndGame(true);
+		}
+
 		this.levelNum++;
 
 		if (m_tileM != null) {

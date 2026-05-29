@@ -70,7 +70,8 @@ public class EnemyManager {
                     bossMortCounter = 60;
                     textBossMort = new Text(gp.SCREEN_WIDTH / 8, 200, "Boss vaincu !\n Nouvel élément débloqué !", 35, 1000);
                     normalEnemiesSpawned = 0;
-                    gp.nextLevelNum(); // Passe au niveau suivant
+                    gp.nextLevelNum();
+                    player.incUnlockedElement();
                 }
                 enemies.remove(i);
             }
