@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 
 /**
  * Entité de base du jeu
- *
  */
 public abstract class Entity extends Position {
 	protected int speed;               // Déplacement de l'entité
@@ -15,7 +14,7 @@ public abstract class Entity extends Position {
 	protected int width;
 	protected int height;
 
-	// Image fixe pour les entités non animées (ex: un projectile, un obstacle)
+	// Image fixe pour les entités non animées
 	public BufferedImage m_idleImage;
 
 	public int getLife() {
@@ -47,12 +46,10 @@ public abstract class Entity extends Position {
 		return this.y + (this.height / 2.0f);
 	}
 
-	/**
-	 * Dessine automatiquement l'entité fixe sur l'écran
-	 * en utilisant sa position et ses dimensions (width et height)
-	 */
+
+	//Dessine automatiquement l'entité fixe sur l'écra en utilisant sa position et ses dimensions
 	public void draw(Graphics2D a_g2) {
-		// Sécurité si l'image n'a pas été initialisée
+		// Si l'image n'a pas été initialisée
 		if (m_idleImage != null) {
 			a_g2.drawImage(m_idleImage, (int)x, (int)y, width, height, null);
 		}
