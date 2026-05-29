@@ -7,8 +7,11 @@ import manager.SpellManager;
 
 public class PlantEnemy extends Enemy {
 
+    // Direction
     private float moveDirX = 1.0f;
 
+
+    // Ennemi de type plante
     public PlantEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(player, gp, spellManager, preloadedFrames, level);
 
@@ -18,6 +21,7 @@ public class PlantEnemy extends Enemy {
         this.life = 3 * super.level;
     }
 
+    // Mouvement de l'ennemi
     @Override
     public void moveOnScreen() {
         move(moveDirX, 0, speed);
@@ -29,6 +33,7 @@ public class PlantEnemy extends Enemy {
         }
     }
 
+    // Tir de l'ennemi
     @Override
     public void shoot() {
         float distX = player.getCenterX() - this.getCenterX();
