@@ -24,9 +24,9 @@ public class BossBar implements HUD {
     }
     //que si le boss prends des dégâts
     public void update() {
-        if (boss.getLife()>0) { // Vérification que le boss est en vie
+        if (boss.getLife()>0) {
             float hpPercentage = (float) boss.getLife() / maxLife;
-            if (hpPercentage < 0) {hpPercentage = 0;}
+            if (hpPercentage < 0) {hpPercentage = 0;} // on vire la barre
             this.currentBarWidth = (int) (this.barWidth * hpPercentage);
         }
     }
@@ -45,7 +45,7 @@ public class BossBar implements HUD {
         a_g2.setColor(Color.BLACK);
         a_g2.fillRect(x, 40, barWidth, 22);
 
-        // Intérieur rouge (utilise la variable calculée dans update())
+        // l'intérieur de la barre
         a_g2.setColor(Color.RED);
         a_g2.fillRect(x, 40, currentBarWidth, 22);
     }
