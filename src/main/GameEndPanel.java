@@ -39,6 +39,10 @@ public class GameEndPanel extends JPanel {
         this.isWin = isWin;
         this.replayCallback = replayCallback;
 
+        if (isWin) {
+            manager.SoundAssetManager.stopAllSounds();
+            manager.SoundAssetManager.playMusicLoop("victory.wav");
+        }
         loadResources();
         setupReplayButton(width, height);
         startSequenceTimer();
