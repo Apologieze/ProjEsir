@@ -1,9 +1,9 @@
 package main;
 
 import UI.HUD;
-import java.awt.Dimension;
-import java.awt.Color;
-import javax.swing.JPanel;
+
+import java.awt.*;
+import javax.swing.*;
 
 import UI.Heart;
 import UI.XpBar;
@@ -12,8 +12,6 @@ import entity.Player;
 import manager.SoundAssetManager;
 import tile.TileManager;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.function.BiConsumer;
 import java.util.ArrayList;
 import entity.HeartItem;
@@ -54,12 +52,19 @@ public class GamePanel extends JPanel implements Runnable{
     // Le callback accepte le score (Integer) et l'état de victoire (Boolean)
     private BiConsumer<Integer, Boolean> onGameEnd;
     private boolean isGameEndTriggered = false;
+    private Runnable onRestart; // Callback pour recommencer depuis la pause
 
-	public int levelNum = 1; // 1 = Forêt, 2 = Eau,
+    public int levelNum = 1; // 1 = Forêt, 2 = Eau,
+
+    // Attributs pour la gestion de la pause
+    private boolean isPaused = false;
+    private JButton resumeButton;
+    private JButton replayButton;
+
 	/**
 	 * Constructeur
 	 */
-    public GamePanel(BiConsumer<Integer, Boolean> onGameEnd) {
+    public GamePanel(BiConsumer<Integer, Boolean> onGameEnd,Runnable onRestart) {
         this.onGameEnd = onGameEnd;
 		m_FPS = 60;
 		m_keyH = new KeyHandler();
@@ -81,9 +86,13 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 		SoundAssetManager.playSE("Sting_em_up.wav");
 
+        setupPauseComponents();
 	}
 
-	/**
+    public GamePanel(BiConsumer<Integer, Boolean> integerBooleanBiConsumer, Object o) {
+    }
+
+    /**
 	 * Lancement du thread principal
 	 */
 	public void startGameThread() {
@@ -123,6 +132,57 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 	}
 
+    /**
+     * Crée et positionne les boutons du menu pause
+     */
+    private void setupPauseComponents() {
+        int btnWidth = 200;
+        int btnHeight = 45;
+        int centerX = (SCREEN_WIDTH - btnWidth) / 2;
+
+        // Bouton Continuer
+        resumeButton = new JButton("CONTINUER");
+        resumeButton.setBounds(centerX, (SCREEN_HEIGHT / 2), btnWidth, btnHeight);
+        resumeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        resumeButton.setBackground(Color.WHITE);
+        resumeButton.setVisible(false); // Masqué par défaut
+        resumeButton.addActionListener(e -> togglePause());
+        this.add(resumeButton);
+
+        // Bouton Rejouer
+        replayButton = new JButton("REJOUER");
+        replayButton.setBounds(centerX, (SCREEN_HEIGHT / 2) + 60, btnWidth, btnHeight);
+        replayButton.setFont(new Font("Arial", Font.BOLD, 16));
+        replayButton.setBackground(Color.WHITE);
+        replayButton.setVisible(false); // Masqué par défaut
+        replayButton.addActionListener(e -> {
+            m_gameThread = null; // Arrête proprement le thread actuel
+            manager.SoundAssetManager.stopSound("BuckBumble.wav");
+            if (onRestart != null) {
+                onRestart.run(); // Déclenche la reconstruction du jeu dans Main
+            }
+        });
+        this.add(replayButton);
+    }
+
+    /**
+     * Alterne entre l'état de pause et l'état de jeu
+     */
+    private void togglePause() {
+        isPaused = !isPaused;
+
+        if (isPaused) {
+            //TODO suspendre la musique
+            resumeButton.setVisible(true);
+            replayButton.setVisible(true);
+        } else {
+            // TODO reprendre la musique au bon moment
+            resumeButton.setVisible(false);
+            replayButton.setVisible(false);
+            this.requestFocusInWindow(); // Redonne le focus au clavier pour le KeyHandler
+        }
+        repaint();
+    }
 
 	/**
 	 * Mise à jour des données des entités
@@ -132,6 +192,18 @@ public class GamePanel extends JPanel implements Runnable{
         // Cas de défaite : le joueur n'a plus de vie
         if (m_player.isDead()) {
             triggerEndGame(false);
+            return;
+        }
+        // Gestion de l'activation/désactivation via la touche Échap
+        if (m_keyH.escapePressed) {
+            m_keyH.escapePressed = false; // Consomme l'entrée
+            if (!isGameEndTriggered) {
+                togglePause();
+            }
+            return;
+        }
+        // Si le jeu est en pause, on bloque la mise à jour des entités
+        if (isPaused) {
             return;
         }
 
@@ -199,7 +271,28 @@ public class GamePanel extends JPanel implements Runnable{
 		m_enemyM.draw(g2);
 		m_spellM.draw(g2);
 		m_player.draw(g2);
-		g2.dispose();
+
+        // Calque visuel de pause
+        if (isPaused) {
+            // 1. Voile noir translucide (alpha = 150 sur 255)
+            g2.setColor(new Color(0, 0, 0, 150));
+            g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+            // 2. Texte de titre "PAUSE"
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.BOLD, 50));
+            String pauseText = "PAUSE";
+            FontMetrics fmPause = g2.getFontMetrics();
+            g2.drawString(pauseText, (SCREEN_WIDTH - fmPause.stringWidth(pauseText)) / 2, (SCREEN_HEIGHT / 2) - 100);
+
+            // 3. Affichage du score en temps réel
+            g2.setFont(new Font("Arial", Font.BOLD, 22));
+            String scoreText = "Score actuel : " + m_player.getTotalScore();
+            FontMetrics fmScore = g2.getFontMetrics();
+            g2.drawString(scoreText, (SCREEN_WIDTH - fmScore.stringWidth(scoreText)) / 2, (SCREEN_HEIGHT / 2) - 40);
+        }
+
+        g2.dispose();
 	}
 
 	private void checkPlayerHeartCollisions() {
@@ -243,5 +336,9 @@ public class GamePanel extends JPanel implements Runnable{
 
 	public void nextLevelNum(){
 		this.levelNum++;
+
+		if (m_tileM != null) {
+			m_tileM.loadLevel(this.levelNum);
+		}
 	}
 }

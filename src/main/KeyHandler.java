@@ -9,8 +9,9 @@ import java.awt.event.KeyListener;
  */
 public class KeyHandler implements KeyListener{
 
-	public boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed, nextElementPressed, nextElementClicked;
+	public boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed, nextElementPressed, nextElementClicked, escapePressed;;
     public boolean wPressed; //test win
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -40,6 +41,9 @@ public class KeyHandler implements KeyListener{
         if (e.getKeyCode() == java.awt.event.KeyEvent.VK_W) { //test win
             wPressed = true;
         }
+        if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
+            escapePressed = true;
+        }
 	}
 
 	@Override
@@ -67,6 +71,10 @@ public class KeyHandler implements KeyListener{
 		}
         if (e.getKeyCode() == java.awt.event.KeyEvent.VK_W) {//test win
             wPressed = false;
+        }
+
+        if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
+            escapePressed = false;
         }
 
 	}

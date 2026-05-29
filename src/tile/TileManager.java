@@ -37,9 +37,43 @@ public class TileManager {
 
 		this.getTileImage();
 
-		m_mapTileNum = this.loadMap("/maps/forest/forest1.csv");
-		m_overlayTileNum = this.loadMap("/maps/forest/forest2.csv"); // Change le nom selon ton fichier
+		// Au lieu de charger en dur, on charge dynamiquement selon le niveau actuel du GamePanel
+		this.loadLevel(m_gp.levelNum);
+	}
 
+	/**
+	 * Charge les fichiers CSV correspondant au numéro du niveau
+	 * et réinitialise la position de la caméra.
+	 */
+	public void loadLevel(int level) {
+		String baseMapPath = "";
+		String overlayMapPath = "";
+
+		switch (level) {
+			case 1:
+				baseMapPath = "/maps/forest/forest1.csv";
+				overlayMapPath = "/maps/forest/forest2.csv";
+				break;
+			case 2:
+				baseMapPath = "/maps/ocean/ocean1.csv";
+				overlayMapPath = "/maps/ocean/ocean2.csv";
+				break;
+			case 3:
+				baseMapPath = "/maps/hell/hell1.csv";
+				overlayMapPath = "/maps/hell/hell2.csv";
+				break;
+			default:
+				// Sécurité (fallback sur la forêt)
+				baseMapPath = "/maps/forest/forest1.csv";
+				overlayMapPath = "/maps/forest/forest2.csv";
+				break;
+		}
+
+		// Chargement des nouveaux tableaux
+		m_mapTileNum = this.loadMap(baseMapPath);
+		m_overlayTileNum = this.loadMap(overlayMapPath);
+
+		// Réinitialisation de la caméra tout en bas de la nouvelle map
 		m_cameraY = (m_mapMaxRow * m_gp.TILE_SIZE) - m_gp.SCREEN_HEIGHT;
 	}
 

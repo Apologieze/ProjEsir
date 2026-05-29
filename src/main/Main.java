@@ -41,12 +41,21 @@ public class Main {
     private static void startGame() {
         window.getContentPane().removeAll();
 
-        // Capture des deux paramètres (score, isWin) injectés par le GamePanel
-        GamePanel gamePanel = new GamePanel((score, isWin) -> {
-            SwingUtilities.invokeLater(() -> {
-                showEndScreen(score, isWin);
-            });
-        });
+        // Appel du constructeur avec les deux arguments requis
+        GamePanel gamePanel = new GamePanel(
+                // Premier argument : BiConsumer (prend deux paramètres)
+                (score, isWin) -> {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        showEndScreen(score, isWin);
+                    });
+                },
+                // Second argument : Runnable
+                () -> {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        startGame();
+                    });
+                }
+        );
 
         window.add(gamePanel);
         refreshWindow();
