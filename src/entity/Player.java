@@ -169,7 +169,7 @@ public class Player extends AnimatedEntity {
 			this.xp = (xp) % this.getNextLevelXp();
 			manager.SoundAssetManager.playSE("levelup.wav");
 			this.nextLevelXp += this.getNextLevelXp() / 2;
-			lvlUpText = new Text((int)x, (int)y - 10, "+1 ATK");
+			lvlUpText = new Text((int)x, (int)y - 10, "+1 ATK", 20, 60);
 		}
 		else {
 			this.xp = xp;

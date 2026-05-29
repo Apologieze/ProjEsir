@@ -21,7 +21,6 @@ public abstract class Enemy extends AnimatedEntity {
     protected float entryDx, entryDy;
     protected  int level;
 
-    // Remplacement du folderPath par la liste préchargée
     public Enemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(preloadedFrames, 10); // Appel de ton constructeur optimisé !
         this.player = player;
@@ -66,7 +65,7 @@ public abstract class Enemy extends AnimatedEntity {
     }
 
     /**
-     * Gère la prise de dégâts de l'ennemi (sans frames d'invincibilité)
+     * Gère la prise de dégâts de l'ennemi
      */
     public void takeDamage(int damage) {
         if (frameCounterDamage <= 0) {

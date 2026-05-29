@@ -13,17 +13,19 @@ public class Text extends Position implements HUD {
 
     private String m_text;
     private int m_timer;
-    private int m_maxTime; // 2 secondes à 60 FPS
+    private int m_maxTime;
     private int m_yOffset;
     private boolean m_alive;
+    private int taille;
 
-    public Text(int x, int y, String a_text) {
+    public Text(int x, int y, String a_text, int taille, int maxTime) {
         setPosition(x, y);
         this.m_text = a_text;
-        this.m_maxTime = 60;
+        this.m_maxTime = maxTime;
         this.m_timer = m_maxTime;
         this.m_yOffset = 0;
         this.m_alive = true;
+        this.taille = taille;
 
     }
 
@@ -31,7 +33,7 @@ public class Text extends Position implements HUD {
     public void draw(Graphics2D a_g2) {
         if (!m_alive) return;
 
-        // 1. Mise à jour de l'animation (Logique)
+        // 1. Mise à jour de l'animation
         m_timer--;
         m_yOffset -= 1; // Monte de 1 pixel par frame
 
@@ -40,13 +42,13 @@ public class Text extends Position implements HUD {
             return;
         }
 
-        // 2. Calcul du fondu (Alpha entre 0 et 255)
+        // Calcul du fondu
         int alpha = (int) ((double) m_timer / m_maxTime * 255);
         if (alpha < 0) alpha = 0;
 
-        // 3. Dessin du texte
-        a_g2.setFont(new Font("Impact", Font.PLAIN, 20));
-        a_g2.setColor(new Color(0, 0, 0));
+        // Dessin du texte
+        a_g2.setFont(new Font("Impact", Font.PLAIN, this.taille));
+        a_g2.setColor(new Color(0, 0, 0, alpha));
 
         // Dessin à la position initiale + le décalage vers le haut
         a_g2.drawString(m_text, this.getX(), this.getY() + m_yOffset);
