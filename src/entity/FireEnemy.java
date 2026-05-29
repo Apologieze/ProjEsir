@@ -10,18 +10,17 @@ public class FireEnemy extends Enemy {
     public FireEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(player, gp, spellManager, preloadedFrames, level);
 
-        this.type = 2; // 0 = Feu
+        this.type = 2;
         this.fireRate = 150; // Tire plus lentement
         this.speed = 1; // Se déplace lentement
-        this.life = 5 * super.level; // Beaucoup de PV !
+        this.life = 5 * super.level;
     }
 
     @Override
     public void moveOnScreen() {
-        // Traque (Tracking) : L'ennemi essaie de s'aligner horizontalement avec le joueur
+        //L'ennemi essaie de s'aligner horizontalement avec le joueur
         float distX = player.getCenterX() - this.getCenterX();
 
-        // Le seuil de "5" évite que l'ennemi ne tremble (jittering) quand il est parfaitement aligné
         if (Math.abs(distX) > 5) {
             float dirX = (distX > 0) ? 1.0f : -1.0f;
             // Ne se déplace que sur l'axe X

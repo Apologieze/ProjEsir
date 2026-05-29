@@ -13,10 +13,10 @@ public class WaterEnemy extends Enemy {
     public WaterEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(player, gp, spellManager, preloadedFrames, level);
 
-        this.type = 1; // 2 = Eau
+        this.type = 1;
         this.fireRate = 100; // Tire légèrement plus vite que la plante
         this.speed = 2;
-        this.life = 2 * super.level; // Un peu moins de PV que la plante
+        this.life = 2 * super.level;
     }
 
     @Override

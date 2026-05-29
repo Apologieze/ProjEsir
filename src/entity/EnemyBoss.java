@@ -66,12 +66,10 @@ public class EnemyBoss extends Enemy {
 
     @Override
     public void shoot() {
-        // Tir en forme de cercle (Nova) grâce à la trigonométrie
+        // Tir en forme de cercle
         for (int i = 0; i < numProjectiles; i++) {
-            // Calcule l'angle pour répartir uniformément les tirs sur 360° (2*PI radians)
+            // Calcule l'angle pour répartir uniformément les tirs sur 360
             double angle = (2 * Math.PI / numProjectiles) * i;
-
-            // Convertit l'angle en vecteur de direction (Cos = X, Sin = Y)
             float dirX = (float) Math.cos(angle);
             float dirY = (float) Math.sin(angle);
 
@@ -86,7 +84,6 @@ public class EnemyBoss extends Enemy {
     @Override
     public void takeDamage(int damage) {
         super.takeDamage(damage);
-        //appel de draw() de BossBar
         if (life>0 && bossBar != null){
             bossBar.update();
         }
