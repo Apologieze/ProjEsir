@@ -43,6 +43,10 @@ public class GameEndPanel extends JPanel {
             manager.SoundAssetManager.stopAllSounds();
             manager.SoundAssetManager.playMusicLoop("victory.wav");
         }
+        else {
+            manager.SoundAssetManager.stopAllSounds();
+            manager.SoundAssetManager.playSE("died.wav");
+        }
         loadResources();
         setupReplayButton(width, height);
         startSequenceTimer();
