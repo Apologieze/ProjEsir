@@ -176,7 +176,7 @@ public class GamePanel extends JPanel implements Runnable{
             isGameEndTriggered = true;
             m_gameThread = null; // Arrêt de la boucle run()
             // Interruption de la musique de fond
-            manager.SoundAssetManager.stopSound("BuckBumble.wav");
+            manager.SoundAssetManager.stopAllSounds();
             if (onGameEnd != null) {
                 onGameEnd.accept(m_player.getTotalScore(), isVictory);
             }

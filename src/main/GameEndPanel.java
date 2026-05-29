@@ -1,5 +1,7 @@
 package main;
 
+import manager.SoundAssetManager;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -85,6 +87,7 @@ public class GameEndPanel extends JPanel {
         replayButton.addActionListener(e -> {
             if (replayCallback != null) {
                 replayCallback.run();
+                SoundAssetManager.playMusicLoop("BuckBumble.wav");
             }
         });
         this.add(replayButton);
