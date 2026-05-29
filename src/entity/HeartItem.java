@@ -10,11 +10,12 @@ public class HeartItem extends Entity {
     private Rectangle m_hitbox;
     private GamePanel m_gp;
 
+    // Item de coeur
     public HeartItem(GamePanel a_gp, int a_x, int a_y) {
         this.m_gp = a_gp; // On enregistre la référence du GamePanel
-        this.x = a_x;
-        this.y = a_y;
-        this.speed = 2; // Vitesse à laquelle le cœur descend
+        this.x = a_x; // Postion x
+        this.y = a_y; // Postion y
+        this.speed = 2; // Vitesse à laquelle le coeur descend
         this.setSize(a_gp.TILE_SIZE, a_gp.TILE_SIZE);
         this.m_hitbox = new Rectangle(a_x, a_y, this.width, this.height);
 
@@ -27,16 +28,19 @@ public class HeartItem extends Entity {
         }
     }
 
+    // Hitbox du coeur
     public Rectangle getHitbox() {
         return m_hitbox;
     }
 
+    // Mise a jour de la position
     public void update() {
         this.y += this.speed;
         this.m_hitbox.x = (int)this.x;
         this.m_hitbox.y = (int)this.y;
     }
 
+    // Affichage
     @Override
     public void draw(Graphics2D a_g2) {
         if (m_idleImage != null) {

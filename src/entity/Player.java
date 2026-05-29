@@ -26,7 +26,7 @@ public class Player extends AnimatedEntity {
 
 
 	private SpellManager spellManager;
-	private int fireRate = 15; // The delay between each shot (15 frames = 4 shots/sec)
+	private int fireRate = 15; // Le delai entre chaque tire
 	private int fireCooldown = 0;
 
 	// Tableau contenant les animations préchargées pour les 3 éléments
@@ -110,15 +110,13 @@ public class Player extends AnimatedEntity {
 	}
 
 	/**
-	 * Handle the creation of the player's spell
+	 * Gère la création du sort du joueur
 	 */
 	private void shoot() {
 		spellManager.spawnPlayerSpell(getCenterX(), getCenterY(), this.element, 0, -1);
 
-		// Reset the cooldown
+		// Reinitialise le cooldown
 		fireCooldown = fireRate;
-
-		// Optional: manager.SoundAssetManager.playSE("shoot.wav");
 	}
 
 	public void incUnlockedElement() {
@@ -126,7 +124,7 @@ public class Player extends AnimatedEntity {
 			this.unlokedElement++;
 		}
 		else {
-			System.out.println("tu as débloqué plus d'élément qu'il y en as ??");
+			System.out.println(" erreur, tu as débloqué plus d'élément qu'il y en as");
 		}
 	}
 
@@ -192,6 +190,7 @@ public class Player extends AnimatedEntity {
 		return (level-1)*(getNextLevelXp())+xp;
 	}
 
+	// Si le joueur est mort
 	public boolean isDead(){
 		return life <= 0;
 	}
@@ -200,6 +199,7 @@ public class Player extends AnimatedEntity {
 		this.damage = damage;
 	}
 
+	// le joueur prend des degats
 	public void addDamage(int damage){
 		this.damage += damage;
 	}
