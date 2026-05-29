@@ -50,7 +50,8 @@ public class EnemySpell extends AnimatedEntity implements ISpell {
         if (!active) return;
 
         updateAnimation();
-        move(dx, dy, speed);
+        this.x += dx * speed;
+        this.y += dy * speed;
 
         if (x < 0 || x > gp.SCREEN_WIDTH || y < 0 || y > gp.SCREEN_HEIGHT) {
             deactivate();

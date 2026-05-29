@@ -243,5 +243,9 @@ public class GamePanel extends JPanel implements Runnable{
 
 	public void nextLevelNum(){
 		this.levelNum++;
+
+		if (m_tileM != null) {
+			m_tileM.loadLevel(this.levelNum);
+		}
 	}
 }
