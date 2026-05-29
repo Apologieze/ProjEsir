@@ -56,8 +56,8 @@ public class SpellManager {
                 playerSpellImages[2] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/water.png"));
 
                 enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/grass"));
-                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/fire"));
                 enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/water"));
+                enemySpellAnimations.add(ImageAssetManager.loadImagesFromFolder("/bullet/enemy/fire"));
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -10,7 +10,7 @@ public class FireEnemy extends Enemy {
     public FireEnemy(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> preloadedFrames, int level) {
         super(player, gp, spellManager, preloadedFrames, level);
 
-        this.type = 0; // 0 = Feu
+        this.type = 2; // 0 = Feu
         this.fireRate = 150; // Tire plus lentement
         this.speed = 1; // Se déplace lentement
         this.life = 5 * super.level; // Beaucoup de PV !

@@ -1,9 +1,6 @@
 package manager;
 
-import entity.Enemy;
-import entity.EnemyBoss;
-import entity.PlantEnemy;
-import entity.Player;
+import entity.*;
 import main.GamePanel;
 
 import java.awt.Graphics2D;
@@ -18,7 +15,9 @@ public class EnemyManager {
     private SpellManager spellManager;
 
     // Cache des animations
+    private List<BufferedImage> fireFrames;
     private List<BufferedImage> plantFrames;
+    private List<BufferedImage> waterFrames;
 
     private int normalEnemiesSpawned = 0;
     private boolean isBossActive = false;
@@ -41,7 +40,9 @@ public class EnemyManager {
     }
 
     private void loadAssets() {
+        fireFrames = ImageAssetManager.loadImagesFromFolder("/enemy/fire");
         plantFrames = ImageAssetManager.loadImagesFromFolder("/enemy/grass");
+        waterFrames = ImageAssetManager.loadImagesFromFolder("/enemy/water");
 
         try {
             bossImages[0] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/16.png"));
@@ -102,33 +103,44 @@ public class EnemyManager {
     /**
      * Génère un ennemi aléatoire en fonction du niveau en cours
      */
+    private int getTypeFromLevel(int levelNum) {
+        switch(levelNum) {
+            case 1: return 1; // Niveau 1 = Forêt / Herbe
+            case 2: return 2; // Niveau 2 = Eau
+            case 3: return 0; // Niveau 3 = Feu
+            default: return 1; // Herbe par défaut
+        }
+    }
+
+    /**
+     * Génère un ennemi ou le boss en fonction du niveau en cours
+     */
     public void spawnRandomEnemy(int levelNum) {
+        // Bloque le spawn des petits ennemis si le boss est là
         if (isBossActive) return;
 
-        // On incrémente notre compteur
         normalEnemiesSpawned++;
 
-        // Si on a atteint les 30 ennemis, on lance le boss au lieu d'un ennemi normal
+        // Si 30 ennemis sont apparus, on fait spawner le boss à la place
         if (normalEnemiesSpawned == 5) {
             spawnBoss(levelNum);
-            return; // On sort de la méthode pour ne pas faire spawner de mob normal
+            return;
         }
 
         Enemy newEnemy = null;
         int levelDrop = this.generateLevelDrop();
+        int type = getTypeFromLevel(levelNum);
 
-        if (levelNum == 1) {
+        // Instanciation polymorphique selon l'élément
+        if (type == 1) {
             newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
+        } else if (type == 2) {
+            newEnemy = new WaterEnemy(player, gp, spellManager, waterFrames, levelDrop);
+        } else {
+            newEnemy = new FireEnemy(player, gp, spellManager, fireFrames, levelDrop);
         }
-        else if (levelNum == 2) {
-            // TODO: Remplacer par WaterEnemy une fois la classe créée
-            // newEnemy = new WaterEnemy(player, gp, spellManager, waterFrames, levelDrop);
-            newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
-        }
-        else {
-            // Sécurité par défaut
-            newEnemy = new PlantEnemy(player, gp, spellManager, plantFrames, levelDrop);
-        }
+
+        // Détermination de la position d'apparition
         int spawnZone = (int) (Math.random() * 3);
         float startX = 0, startY = 0;
         float entryDx = 0, entryDy = 0;
@@ -151,7 +163,6 @@ public class EnemyManager {
                 break;
         }
 
-        // 3. Application des paramètres et ajout au jeu
         newEnemy.setPosition(startX, startY);
         newEnemy.setEntryDirection(entryDx, entryDy);
 
@@ -164,7 +175,7 @@ public class EnemyManager {
     private void spawnBoss(int levelNum) {
         setBossActive(true); // Bloque le spawn des ennemis classiques
 
-        int bossType = levelNum - 1; // Si level 1 = type 0
+        int bossType = levelNum - 1;
         int levelDrop = this.generateLevelDrop();
 
         // Si l'image du boss n'est pas chargée, on utilise la première
