@@ -1,13 +1,13 @@
 package main;
 
-import UI.HUD;
+import ui.HUD;
 
 import java.awt.*;
 import javax.swing.*;
 
-import UI.Heart;
-import UI.XpBar;
-import UI.Icon;
+import ui.Heart;
+import ui.XpBar;
+import ui.Icon;
 import entity.Player;
 import manager.SoundAssetManager;
 import tile.TileManager;
@@ -325,7 +325,7 @@ public class GamePanel extends JPanel implements Runnable{
 		double rand = Math.random();
 
 		// 5 % de chance de faire spawn un coeur e
-		if (rand < 0.05) {
+		if (rand < 0.08) {
 			heartList.add(new HeartItem(this, enemyX, enemyY));
 		}
 	}

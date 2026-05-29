@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import main.GamePanel;
 import entity.EnemyBoss;

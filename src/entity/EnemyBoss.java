@@ -1,7 +1,7 @@
 package entity;
 
 import main.GamePanel;
-import UI.BossBar;
+import ui.BossBar;
 import manager.SpellManager;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class EnemyBoss extends Enemy {
         this.type = type;
         this.fireRate = 90; // Tire toutes les 1,5 secondes
         this.speed = 0;     // Le boss reste immobile au centre
-        this.life = 20*gp.levelNum;    // Beaucoup de PV pour un boss
+        this.life = 30*gp.levelNum;    // Beaucoup de PV pour un boss
 
         // Taille spécifique du boss (64x96)
         this.setSize(64*2, 96*2);

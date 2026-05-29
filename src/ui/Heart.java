@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import entity.Position;
 import java.awt.Graphics2D;

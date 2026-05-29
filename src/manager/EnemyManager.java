@@ -1,6 +1,6 @@
 package manager;
 
-import UI.Text;
+import ui.Text;
 import entity.*;
 import main.GamePanel;
 

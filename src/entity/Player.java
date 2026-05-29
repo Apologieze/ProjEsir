@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import UI.Text;
+import ui.Text;
 import main.KeyHandler;
 import manager.ImageAssetManager;
 import manager.SpellManager;

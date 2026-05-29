@@ -1,4 +1,4 @@
-package UI;
+package ui;
 import entity.Position;
 import entity.Player;
 import main.GamePanel;

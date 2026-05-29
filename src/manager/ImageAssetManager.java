@@ -3,6 +3,7 @@ package manager;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,40 +33,34 @@ public class ImageAssetManager  {
     }
 
     /**
-     * Charge toutes les images (.png) présentes dans le dossier
-     * @param folderPath Le chemin du dossier (ex: "/player/run_animation/")
-     * @return Une liste contenant toutes les images du dossier
+     * Charge toutes les images d'un dossier (Compatible création de JAR)
+     * Tes images dans le dossier doivent être nommées de façon séquentielle : 0.png, 1.png, 2.png, etc.
      */
     public static List<BufferedImage> loadImagesFromFolder(String folderPath) {
         List<BufferedImage> images = new ArrayList<>();
+        int i = 0; // Si tes images commencent à 1.png, mets 1 ici
 
-        try {
-            URL resourceUrl = ImageAssetManager.class.getResource(folderPath);
-            if (resourceUrl == null) {
-                System.err.println("Erreur : Dossier introuvable -> " + folderPath);
-                return images;
+        while (true) {
+            // On construit le chemin. Ex: "/enemy/grass/0.png"
+            String imagePath = folderPath + "/" + i + ".png";
+
+            // getResourceAsStream cherche dans le classpath (le src ou le res dans l'IDE, ou à la racine du JAR)
+            InputStream is = ImageAssetManager.class.getResourceAsStream(imagePath);
+
+            // Si is est null, c'est que le fichier n'existe pas. On a donc atteint la fin de l'animation !
+            if (is == null) {
+                break;
             }
 
-            File folder = new File(resourceUrl.getFile());
-            if (folder.exists() && folder.isDirectory()) {
-                File[] files = folder.listFiles();
-
-                if (files != null) {
-                    // Trie les fichiers par ordre alphabétique pour garantir le bon ordre des animations
-                    Arrays.sort(files);
-
-                    for (File file : files) {
-                        if (file.isFile() && file.getName().toLowerCase().endsWith(".png")) {
-                            images.add(ImageIO.read(file));
-                        }
-                    }
-                }
+            try {
+                images.add(javax.imageio.ImageIO.read(is));
+            } catch (Exception e) {
+                System.err.println("Erreur de lecture de l'image : " + imagePath);
+                e.printStackTrace();
+                break;
             }
-        } catch (IOException e) {
-            System.err.println("Erreur lors du chargement du dossier -> " + folderPath);
-            e.printStackTrace();
+            i++;
         }
-
         return images;
     }
 
