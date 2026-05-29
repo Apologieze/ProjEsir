@@ -63,8 +63,8 @@ public class Player extends AnimatedEntity {
 	}
 
 	protected void setDefaultValues() {
-		x = 100;
-		y = 100;
+		x = (manager.SizeManager.SCREEN_WIDTH / 2.0f) - (SIZE / 2.0f);
+		y = (manager.SizeManager.SCREEN_HEIGHT / 2.0f) - (SIZE / 2.0f);
 		speed = 4;
 		life = 5;
 	}

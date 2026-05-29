@@ -139,8 +139,7 @@ public class EnemyManager {
 
         normalEnemiesSpawned++;
 
-        // Si 30 ennemis sont apparus, on fait spawner le boss à la place
-        if (normalEnemiesSpawned == 5) {
+        if (normalEnemiesSpawned == 20) {
             spawnBoss(levelNum);
             return;
         }
