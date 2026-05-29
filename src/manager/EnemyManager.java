@@ -68,7 +68,7 @@ public class EnemyManager {
                     manager.SoundAssetManager.playMusicLoop("BuckBumble.wav");
                     setBossActive(false);
                     bossMortCounter = 60;
-                    textBossMort = new Text(gp.SCREEN_WIDTH / 8, 200, "LE BOSS EST MORT ! NIVEAU TERMINÉ !", 35, 1000);
+                    textBossMort = new Text(gp.SCREEN_WIDTH / 8, 200, "Boss vaincu !\n Nouvel élément débloqué !", 35, 1000);
                     normalEnemiesSpawned = 0;
                     gp.nextLevelNum(); // Passe au niveau suivant
                 }
