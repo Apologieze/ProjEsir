@@ -1,11 +1,10 @@
 package manager;
 
 /**
- * Static manager holding global dimensions for the game.
+ * Gestionnaire statique possédant des dimensions globales pour le jeu.
  */
 public class SizeManager {
 
-    // Base tile settings
     public static final int ORIGINAL_TILE_SIZE = 16;
     public static final int SCALE = 3;
     public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE; // 48x48 pixels

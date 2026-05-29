@@ -90,7 +90,6 @@ public class SoundAssetManager {
 
     /**
      * Interrompt tous les flux audio actuellement en cours de lecture.
-     * Recommandé lors d'un changement majeur de panel ou d'état.
      */
     public static void stopAllSounds() {
         for (Clip clip : sounds.values()) {

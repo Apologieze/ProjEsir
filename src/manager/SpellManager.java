@@ -29,8 +29,8 @@ public class SpellManager {
     private static BufferedImage[] playerSpellImages = new BufferedImage[3];
     private static List<List<BufferedImage>> enemySpellAnimations = new ArrayList<>(3);
 
-    private final int[] enemySpellMoveSpeeds = {6, 6, 3}; // Type 1 is fast, Type 2 is slow
-    private final int[] enemySpellAnimSpeeds = {3, 5, 12}; // Type 1 animates twice as fast
+    private final int[] enemySpellMoveSpeeds = {6, 6, 3}; // Type 1 est rapide, Type 2 est lent
+    private final int[] enemySpellAnimSpeeds = {3, 5, 12}; // Type 1 animé deux fois plus vite
 
     public SpellManager(GamePanel gp, EnemyManager enemyManager, Player player) {
         this.gp = gp;
@@ -45,11 +45,9 @@ public class SpellManager {
 
     /**
      * Chargement en mémoire des assets.
-     * Cette méthode garantit que le disque n'est lu qu'à l'initialisation.
      */
     private void loadAssets() {
         try {
-            // Remplacer par vos chemins réels
             if (playerSpellImages[0] == null) {
                 playerSpellImages[0] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/fire.png"));
                 playerSpellImages[1] = ImageIO.read(getClass().getResourceAsStream("/bullet/bee/grass.png"));

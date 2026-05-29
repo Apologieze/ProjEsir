@@ -23,7 +23,6 @@ public class ImageAssetManager  {
     public static BufferedImage loadImage(String path) {
         BufferedImage image = null;
         try {
-            // Utilisation de getResourceAsStream qui est plus sûr
             image = ImageIO.read(Objects.requireNonNull(ImageAssetManager.class.getResourceAsStream(path)));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Erreur : Impossible de charger l'image au chemin -> " + path);
@@ -33,7 +32,7 @@ public class ImageAssetManager  {
     }
 
     /**
-     * Charge toutes les images (.png) présentes dans un dossier spécifique
+     * Charge toutes les images (.png) présentes dans le dossier
      * @param folderPath Le chemin du dossier (ex: "/player/run_animation/")
      * @return Une liste contenant toutes les images du dossier
      */
@@ -56,7 +55,6 @@ public class ImageAssetManager  {
                     Arrays.sort(files);
 
                     for (File file : files) {
-                        // Ne charge que les fichiers PNG
                         if (file.isFile() && file.getName().toLowerCase().endsWith(".png")) {
                             images.add(ImageIO.read(file));
                         }
@@ -82,7 +80,6 @@ public class ImageAssetManager  {
     public static List<BufferedImage> loadSpritesheet(String path, int tileWidth, int tileHeight) {
         List<BufferedImage> sprites = new ArrayList<>();
 
-        // Utilise la méthode loadImage déjà existante dans ImageAsset
         BufferedImage spriteSheet = loadImage(path);
 
         if (spriteSheet == null) {
