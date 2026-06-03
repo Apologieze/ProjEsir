@@ -139,7 +139,7 @@ public class EnemyManager {
 
         if (!bonusEnemy) { // si c'est un bonusEnemy alors on ne met pas de boss
             normalEnemiesSpawned++;
-            if (normalEnemiesSpawned == 25) {
+            if (normalEnemiesSpawned == 20) {
                 spawnBoss(levelNum);
                 return;
             }

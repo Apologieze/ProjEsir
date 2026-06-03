@@ -14,7 +14,7 @@ public class WaterEnemy extends Enemy {
         super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 1;
-        this.fireRate = 90; // Tire légèrement plus vite que la plante
+        this.fireRate = 100; // Tire légèrement plus vite que la plante
         this.speed = 2;
         this.life = 2 * super.level;
     }
@@ -31,9 +31,10 @@ public class WaterEnemy extends Enemy {
         // Rebond sur les bords de l'écran
         if (x <= 0) {
             moveDirX = 1.0f;
-            this.speed = (this.speed+1)%2+2; // sa vitesse change
+            this.speed = (this.speed*2)%6; // sa vitesse change
         } else if (x >= gp.SCREEN_WIDTH - width) {
             moveDirX = -1.0f;
+            this.speed = (this.speed*2)%6; // sa vitesse change
         }
     }
 

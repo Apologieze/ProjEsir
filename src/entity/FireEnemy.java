@@ -11,7 +11,7 @@ public class FireEnemy extends Enemy {
         super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 2;
-        this.fireRate = 100;
+        this.fireRate = 120;
         this.speed = 1; // Se déplace lentement
         this.life = 4 * super.level;
     }
@@ -26,10 +26,10 @@ public class FireEnemy extends Enemy {
             // Ne se déplace que sur l'axe X
             move(dirX, 0, speed);
         }
-        else if (Math.abs(distX) > 60) { // il se barre si le joueur peut lui tirer dessus
+        else if (Math.abs(distX) > 30) { // il se barre si le joueur peut lui tirer dessus
             float dirX = (distX > 0) ? 1.0f : -1.0f;
             // Ne se déplace que sur l'axe X
-            move(dirX, 0, -speed);
+            move(-dirX, 0, speed);
         }
     }
 

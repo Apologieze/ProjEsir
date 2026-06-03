@@ -223,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable{
         m_enemyM.update();
 
 		enemySpawnTimer++;
-		if (enemySpawnTimer >= 140) {
+		if (enemySpawnTimer >= 150) {
 			m_enemyM.spawnRandomEnemy(this.levelNum,false);
 			// chance de faire spawn un ennemi d'ancienne zone
 			if(this.levelNum>1) {
