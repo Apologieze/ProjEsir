@@ -52,7 +52,7 @@ public class Player extends AnimatedEntity {
 		this.element = 0;
 		this.unlokedElement = 1;
 		this.setSize(SIZE, SIZE);
-		damage = 1;
+		damage = 2;
 	}
 
 	/**

@@ -14,6 +14,8 @@ import tile.TileManager;
 
 import java.util.function.BiConsumer;
 import java.util.ArrayList;
+import java.util.random.RandomGenerator;
+
 import entity.HeartItem;
 
 /**
@@ -54,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable{
     private boolean isGameEndTriggered = false;
     private Runnable onRestart; // Callback pour recommencer depuis la pause
 
-    public int levelNum = 1; // 1 = Forêt, 2 = Eau,
+    public int levelNum = 1; // 1 = Forêt, 2 = Eau, 3 = feu
 
     // Attributs pour la gestion de la pause
     private boolean isPaused = false;
@@ -221,9 +223,26 @@ public class GamePanel extends JPanel implements Runnable{
         m_enemyM.update();
 
 		enemySpawnTimer++;
-		if (enemySpawnTimer >= 90) {
+		if (enemySpawnTimer >= 150) {
 			m_enemyM.spawnRandomEnemy(this.levelNum);
-			//m_enemyM.spawnRandomPlant();
+			// chance de faire spawn un ennemi d'ancienne zone
+			if(this.levelNum>1) {
+				double rand = Math.random();
+				
+				if (rand < 0.15) {
+					m_enemyM.spawnRandomEnemy(1);
+				}
+			}
+			if(this.levelNum>2) {
+				double rand = Math.random();
+
+				if (rand < 0.10) {
+					m_enemyM.spawnRandomEnemy(2);
+				}
+			}
+			
+
+			
 			enemySpawnTimer = 0;
 		}
 
@@ -324,7 +343,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void checkHeartDrop(int enemyX, int enemyY) {
 		double rand = Math.random();
 
-		// 5 % de chance de faire spawn un coeur e
+		// 8 % de chance de faire spawn un coeur
 		if (rand < 0.08) {
 			heartList.add(new HeartItem(this, enemyX, enemyY));
 		}
