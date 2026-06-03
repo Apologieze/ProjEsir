@@ -11,6 +11,7 @@ public class EnemyBoss extends Enemy {
 
     private int numProjectiles = 16; // Le nombre de tirs dans le cercle (tu peux l'augmenter !)
     private BossBar bossBar;
+    private int alternate = 0; // pour pas qu'il ne tire tjr au mm endroit
 
     public EnemyBoss(Player player, GamePanel gp, SpellManager spellManager, BufferedImage bossImage, int type, int levelDrop) {
         super(player, gp, spellManager, createSingleFrameList(bossImage), levelDrop);
@@ -69,7 +70,7 @@ public class EnemyBoss extends Enemy {
         // Tir en forme de cercle
         for (int i = 0; i < numProjectiles; i++) {
             // Calcule l'angle pour répartir uniformément les tirs sur 360
-            double angle = (2 * Math.PI / numProjectiles) * i;
+            double angle = (2 * Math.PI / numProjectiles) * i + alternate * Math.PI / numProjectiles;
             float dirX = (float) Math.cos(angle);
             float dirY = (float) Math.sin(angle);
 
@@ -79,6 +80,7 @@ public class EnemyBoss extends Enemy {
 
         // Son pour tir du boss
         manager.SoundAssetManager.playSE("bossShoot.wav");
+        alternate=++alternate%2;
     }
 
     @Override
