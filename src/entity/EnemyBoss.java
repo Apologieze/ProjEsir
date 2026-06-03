@@ -32,7 +32,7 @@ public class EnemyBoss extends Enemy {
         String bossName = "";
         switch (this.type) {
             case 0:
-                numProjectiles = 16;
+                numProjectiles = 12;
                 bossName = "Boss de la Forêt";
                 break;
             case 1:
@@ -40,7 +40,7 @@ public class EnemyBoss extends Enemy {
                 numProjectiles = 18;
                 break;
             case 2:
-                numProjectiles = 20;
+                numProjectiles = 22;
                 bossName = "Boss de Feu";
                 break;
             default:

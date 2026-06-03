@@ -11,20 +11,25 @@ public class FireEnemy extends Enemy {
         super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 2;
-        this.fireRate = 75; // Tire plus vite
+        this.fireRate = 100;
         this.speed = 1; // Se déplace lentement
-        this.life = 5 * super.level;
+        this.life = 4 * super.level;
     }
 
     @Override
     public void moveOnScreen() {
-        //L'ennemi essaie de s'aligner horizontalement avec le joueur
+        //L'ennemi essaie de s'aligner horizontalement avec le joueur mais pas trop
         float distX = player.getCenterX() - this.getCenterX();
 
-        if (Math.abs(distX) > 5) {
+        if (Math.abs(distX) > 70) {
             float dirX = (distX > 0) ? 1.0f : -1.0f;
             // Ne se déplace que sur l'axe X
             move(dirX, 0, speed);
+        }
+        else if (Math.abs(distX) > 60) { // il se barre si le joueur peut lui tirer dessus
+            float dirX = (distX > 0) ? 1.0f : -1.0f;
+            // Ne se déplace que sur l'axe X
+            move(dirX, 0, -speed);
         }
     }
 

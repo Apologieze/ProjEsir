@@ -16,7 +16,7 @@ public class PlantEnemy extends Enemy {
         super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 0;
-        this.fireRate = 120;
+        this.fireRate = 130;
         this.speed = 2;
         this.life = 3 * super.level;
     }
