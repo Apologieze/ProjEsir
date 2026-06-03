@@ -11,7 +11,7 @@ public class FireEnemy extends Enemy {
         super(player, gp, spellManager, preloadedFrames, level);
 
         this.type = 2;
-        this.fireRate = 150; // Tire plus lentement
+        this.fireRate = 75; // Tire plus vite
         this.speed = 1; // Se déplace lentement
         this.life = 5 * super.level;
     }
