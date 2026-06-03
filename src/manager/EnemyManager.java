@@ -133,16 +133,19 @@ public class EnemyManager {
     /**
      * Génère un ennemi ou le boss en fonction du niveau en cours
      */
-    public void spawnRandomEnemy(int levelNum) {
+    public void spawnRandomEnemy(int levelNum, boolean bonusEnemy) {
         // Bloque le spawn des petits ennemis si le boss est là
         if (isBossActive) return;
 
-        normalEnemiesSpawned++;
-
-        if (normalEnemiesSpawned == 20) {
-            spawnBoss(levelNum);
-            return;
+        if (!bonusEnemy) { // si c'est un bonusEnemy alors on ne met pas de boss
+            normalEnemiesSpawned++;
+            if (normalEnemiesSpawned == 25) {
+                spawnBoss(levelNum);
+                return;
+            }
         }
+
+        
 
         Enemy newEnemy = null;
         int levelDrop = this.generateLevelDrop();

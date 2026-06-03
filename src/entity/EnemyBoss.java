@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EnemyBoss extends Enemy {
 
-    private int numProjectiles = 16; // Le nombre de tirs dans le cercle (tu peux l'augmenter !)
+    private int numProjectiles; // Le nombre de tirs dans le cercle
     private BossBar bossBar;
     private int alternate = 0; // pour pas qu'il ne tire tjr au mm endroit
 
@@ -32,12 +32,15 @@ public class EnemyBoss extends Enemy {
         String bossName = "";
         switch (this.type) {
             case 0:
+                numProjectiles = 16;
                 bossName = "Boss de la Forêt";
                 break;
             case 1:
                 bossName = "Boss de l'Eau";
+                numProjectiles = 18;
                 break;
             case 2:
+                numProjectiles = 20;
                 bossName = "Boss de Feu";
                 break;
             default:
