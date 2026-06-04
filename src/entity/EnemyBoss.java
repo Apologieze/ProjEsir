@@ -13,8 +13,8 @@ public class EnemyBoss extends Enemy {
     private BossBar bossBar;
     private int alternate = 0; // pour pas qu'il ne tire tjr au mm endroit
 
-    public EnemyBoss(Player player, GamePanel gp, SpellManager spellManager, BufferedImage bossImage, int type, int levelDrop) {
-        super(player, gp, spellManager, createSingleFrameList(bossImage), levelDrop);
+    public EnemyBoss(Player player, GamePanel gp, SpellManager spellManager, List<BufferedImage> bossImage, int type, int levelDrop) {
+        super(player, gp, spellManager, bossImage, levelDrop);
 
         this.type = type;
         this.fireRate = 90; // Tire toutes les 1,5 secondes

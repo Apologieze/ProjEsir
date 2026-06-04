@@ -22,6 +22,10 @@ public class EnemyManager {
     private List<BufferedImage> plantFrames;
     private List<BufferedImage> waterFrames;
 
+    private List<BufferedImage> plantBossFrames;
+    private List<BufferedImage> fireBossFrames;
+    private List<BufferedImage> waterBossFrames;
+
     private int normalEnemiesSpawned = 0;
     private boolean isBossActive = false;
     private int bossMortCounter = 0;
@@ -50,6 +54,9 @@ public class EnemyManager {
         waterFrames = ImageAssetManager.loadImagesFromFolder("/enemy/water");
 
         try {
+            plantBossFrames = ImageAssetManager.loadImagesFromFolder("/enemy/boss/grass");
+            waterBossFrames = ImageAssetManager.loadImagesFromFolder("/enemy/boss/water");
+            fireBossFrames = ImageAssetManager.loadImagesFromFolder("/enemy/boss/fire");
             bossImages[0] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/16.png"));
             bossImages[1] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/05.png"));
             bossImages[2] = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/enemy/boss/01.png"));
@@ -199,9 +206,24 @@ public class EnemyManager {
         int levelDrop = this.generateLevelDrop();
 
         // Si l'image du boss n'est pas chargée, on utilise la première
-        BufferedImage bossImg = bossImages[bossType];
-        if (bossImg == null) bossImg = bossImages[0];
+//        BufferedImage bossImg = bossImages[bossType];
+//        if (bossImg == null) bossImg = bossImages[0];
 
+        List<BufferedImage> bossImg;
+        switch (bossType) {
+            case 0:
+                bossImg=plantBossFrames;
+                break;
+            case 1:
+                bossImg=waterBossFrames;
+                break;
+            case 2:
+                bossImg=fireBossFrames;
+                break;
+            default:
+                bossImg=plantBossFrames;
+                break;
+        }
         EnemyBoss boss = new EnemyBoss(player, gp, spellManager, bossImg, bossType, levelDrop);
 
         // On l'ajoute à la liste des ennemis

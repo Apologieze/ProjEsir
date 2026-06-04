@@ -13,7 +13,7 @@ public class FireEnemy extends Enemy {
         this.type = 2;
         this.fireRate = 120;
         this.speed = 1; // Se déplace lentement
-        this.life = 4 * super.level;
+        this.life = 3 * super.level;
     }
 
     @Override
